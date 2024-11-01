@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentasi Google Slides dengan Animasi Modern</title>
+    <style>
+        /* Gaya untuk seluruh body */
+        body {
+            margin: 0;
+            background-color: #ffffff; /* Latar belakang putih */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; /* Tinggi penuh */
+            overflow: hidden; /* Menghindari scrollbar */
+        }
+
+        /* Gaya untuk iframe agar memenuhi layar */
+        #slidesFrame {
+            width: 100vw; /* Lebar 100% dari viewport */
+            height: 100vh; /* Tinggi 100% dari viewport */
+            border: none;
+            opacity: 0; /* Awal iframe tersembunyi */
+            transition: opacity 1s ease-in-out; /* Efek fade-in */
+        }
+
+        /* Gaya layar loading */
+        #loadingScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #f0f0f0; /* Latar belakang layar loading */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            font-size: 2em;
+            color: #333;
+            z-index: 1;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Gaya untuk logo loader */
+        .loader {
+            width: 100px; /* Sesuaikan ukuran logo */
+            height: 100px; /* Sesuaikan ukuran logo */
+            animation: breathe 3s ease-in-out infinite; /* Efek bernafas 3 detik */
+            margin-bottom: 20px; /* Jarak antara logo dan teks */
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); } /* Memperbesar saat bernapas */
+        }
+
+        /* Gaya animasi titik-titik untuk layar loading */
+        .dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            margin: 0 4px;
+            background-color: #333;
+            border-radius: 50%;
+            opacity: 0;
+            animation: blink 1.4s infinite both;
+        }
+
+        .dot:nth-child(1) { animation-delay: 0.2s; }
+        .dot:nth-child(2) { animation-delay: 0.4s; }
+        .dot:nth-child(3) { animation-delay: 0.6s; }
+
+        /* Animasi berkedip untuk titik-titik */
+        @keyframes blink {
+            0%, 80%, 100% { opacity: 0; }
+            40% { opacity: 1; }
+        }
+
+        /* Animasi untuk teks "Sedang Mengupdate" */
+        #updatingText {
+            animation: updateAnimation 3s infinite; /* Durasi 3 detik */
+        }
+
+        @keyframes updateAnimation {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; } /* Berubah opacity untuk efek */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Layar loading dengan animasi logo dan teks -->
+    <div id="loadingScreen">
+        <img src="https://i.imgur.com/jlcGRSZ.png" alt="Logo" class="loader"> <!-- URL logo Anda -->
+        <div id="updatingText">Sedang Mengupdate<span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+    </div>
+
+    <!-- iframe Google Slides -->
+    <iframe id="slidesFrame" 
+            src="https://docs.google.com/presentation/d/e/2PACX-1vSQ38LjFgAHXbNbfC4gkaOTJsLCCny4BZhxZ3ttF_mD74Onq800eqQhN7pqHnr6fgexDu8dSJv1Fl1d/embed?start=true&loop=true&delayms=10000" 
+            allowfullscreen="true">
+    </iframe>
+
+    <!-- JavaScript untuk memperbarui iframe dan menampilkan layar loading sementara -->
+    <script>
+        const iframe = document.getElementById("slidesFrame");
+        const loadingScreen = document.getElementById("loadingScreen");
+
+        // Fungsi untuk memuat ulang iframe dan menampilkan layar loading
+        function reloadIframe() {
+            loadingScreen.style.display = "flex"; // Tampilkan layar loading
+            iframe.style.opacity = 0; // Sembunyikan iframe dengan opacity
+
+            // Setelah iframe selesai dimuat, sembunyikan layar loading dan tampilkan dengan efek fade-in
+            iframe.onload = function() {
+                loadingScreen.style.display = "none";
+                iframe.style.opacity = 1; // Tampilkan iframe dengan efek fade-in
+            };
+
+            // Refresh iframe
+            iframe.src = iframe.src;
+        }
+
+        // Mulai dengan memuat pertama kali
+        reloadIframe();
+
+        // Set interval untuk refresh setiap 5 detik
+        setInterval(reloadIframe, 5000); // 5000 ms = 5 detik
+    </script>
+
+</body>
+</html>
