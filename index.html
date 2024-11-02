@@ -132,9 +132,9 @@
         <div class="title">TJAHAJA BARU</div> <!-- Teks TJAHAJA BARU -->
     </div>
 
-    <!-- iframe Google Slides -->
+    <!-- iframe Google Slides baru -->
     <iframe id="slidesFrame" 
-            src="https://docs.google.com/presentation/d/e/2PACX-1vSQ38LjFgAHXbNbfC4gkaOTJsLCCny4BZhxZ3ttF_mD74Onq800eqQhN7pqHnr6fgexDu8dSJv1Fl1d/embed?start=true&loop=true&delayms=10000" 
+            src="https://docs.google.com/presentation/d/e/2PACX-1vSQ38LjFgAHXbNbfC4gkaOTJsLCCny4BZhxZ3ttF_mD74Onq800eqQhN7pqHnr6fgexDu8dSJv1Fl1d/embed?start=true&loop=true&delayms=30000" 
             allowfullscreen="true">
     </iframe>
 
@@ -178,15 +178,18 @@
             setTimeout(() => {
                 footerText.innerHTML = ""; // Menghapus semua kalimat
                 updateFooterText(); // Mulai kembali
-            }, messages.length * 2000 + 180000); // Total waktu tampil + waktu jeda
+            }, messages.length * 2000 + 15000); // Total waktu hingga pembaruan
         }
 
-        // Memulai fungsi updateFooterText setelah 3 detik
-        setTimeout(() => {
-            loadingScreen.style.display = "none"; // Menyembunyikan layar loading
-            iframe.style.opacity = 1; // Menampilkan iframe
-            updateFooterText(); // Mulai memperbarui teks footer
-        }, 3000);
+        // Memulai animasi loading
+        loadingScreen.style.opacity = "1"; // Tampilkan loading screen
+        iframe.onload = () => {
+            loadingScreen.style.opacity = "0"; // Sembunyikan loading screen setelah iframe dimuat
+            iframe.style.opacity = "1"; // Tampilkan iframe
+        };
+
+        // Memperbarui teks footer
+        updateFooterText();
     </script>
 </body>
 </html>
