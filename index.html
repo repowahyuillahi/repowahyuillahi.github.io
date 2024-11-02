@@ -66,7 +66,7 @@
             margin-top: 20px;
         }
 
-        /* Gaya untuk footer berjalan */
+        /* Gaya footer berjalan */
         #footer {
             position: absolute;
             bottom: 0;
@@ -75,13 +75,19 @@
             background-color: rgba(255, 255, 255, 0.8);
             color: #041066;
             display: flex;
-            justify-content: center;
-            align-items: center;
+            align-items: center; /* Menyelaraskan secara vertikal */
             overflow: hidden;
             border-top: 2px solid white;
-            padding: 5px 0;
+            padding: 5px 10px; /* Tambah padding untuk estetika */
             font-family: 'Roboto', sans-serif;
             height: 30px;
+        }
+
+        /* Gaya untuk teks jam */
+        #timeDisplay {
+            margin-left: 10px; /* Menambahkan jarak antara timer dan teks info */
+            white-space: nowrap; /* Menghindari teks terpotong */
+            font-weight: bold;
         }
 
         .marquee {
@@ -137,7 +143,9 @@
     </iframe>
 
     <div id="footer">
-        <div class="marquee" id="footerText"></div>
+        <div id="timeDisplay">00:00:00</div>
+        &nbsp;&nbsp; <!-- Menambahkan dua spasi -->
+        <div id="infoText" class="marquee"></div>
     </div>
 
     <div id="animatedTextContainer">
@@ -147,7 +155,8 @@
     <script>
         const iframe = document.getElementById("slidesFrame");
         const loadingScreen = document.getElementById("loadingScreen");
-        const footerText = document.getElementById("footerText");
+        const infoText = document.getElementById("infoText");
+        const timeDisplay = document.getElementById("timeDisplay");
 
         const messages = [
             "DISPLAY INFORMASI TJAHAJA BARU : ",
@@ -162,13 +171,13 @@
                     const span = document.createElement('span');
                     span.textContent = message;
                     span.style.animation = "slideInFromBottom 1s forwards";
-                    footerText.appendChild(span);
-                    footerText.appendChild(document.createTextNode("   "));
+                    infoText.appendChild(span);
+                    infoText.appendChild(document.createTextNode("   "));
                 }, index * 2000);
             });
 
             setTimeout(() => {
-                footerText.innerHTML = "";
+                infoText.innerHTML = "";
                 updateFooterText();
             }, messages.length * 2000 + 15000);
         }
@@ -180,12 +189,17 @@
 
         updateFooterText();
 
-        // Mengatur refresh otomatis setiap 3 menit
-        setTimeout(() => {
-            setInterval(() => {
-                location.reload(); // Memuat ulang halaman
-            }, 180000); // 3 menit
-        }, 3000); // Mulai interval setelah loading selesai
+        // Menampilkan waktu terkini
+        function updateTime() {
+            const now = new Date();
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            timeDisplay.textContent = `${hours}:${minutes}:${seconds}`;
+        }
+
+        setInterval(updateTime, 1000); // Memperbarui setiap detik
+        updateTime(); // Panggil fungsi untuk memperbarui waktu secara langsung saat halaman dimuat
     </script>
 </body>
 </html>
