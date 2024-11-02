@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet"> <!-- Link ke font Roboto Medium -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
     <title>Presentasi Google Slides dengan Animasi Modern</title>
     <style>
         /* Gaya untuk iframe agar memenuhi layar */
         #slidesFrame {
             width: 100%;
-            height: calc(100vh - 50px); /* Tinggi iframe mengurangi tinggi footer */
+            height: calc(100vh - 50px);
             border: none;
             opacity: 0; /* Awal iframe tersembunyi */
             transition: opacity 1s ease-in-out; /* Efek fade-in */
@@ -22,11 +22,11 @@
             left: 0;
             width: 100%;
             height: 100vh;
-            background-color: #ffffff; /* Latar belakang putih */
+            background-color: #ffffff;
             display: flex;
             align-items: center;
             justify-content: center;
-            flex-direction: column; /* Mengatur arah konten menjadi kolom */
+            flex-direction: column;
             z-index: 1;
             font-family: Arial, sans-serif;
         }
@@ -61,27 +61,27 @@
         /* Gaya untuk teks TJAHAJA BARU */
         .title {
             font-weight: bold;
-            font-size: 36px; /* Ukuran font besar */
-            color: #041066; /* Warna teks */
-            margin-top: 20px; /* Jarak atas dari loader */
+            font-size: 36px;
+            color: #041066;
+            margin-top: 20px;
         }
 
         /* Gaya untuk footer berjalan */
         #footer {
             position: absolute;
-            bottom: 0; /* Menempatkan footer di bagian bawah */
+            bottom: 0;
             left: 0;
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.8); /* Latar belakang dengan sedikit transparansi */
-            color: #041066; /* Warna teks footer */
-            display: flex; /* Menggunakan flex untuk mengatur posisi */
-            justify-content: center; /* Mengatur konten di tengah secara horizontal */
-            align-items: center; /* Mengatur konten di tengah secara vertikal */
-            overflow: hidden; /* Sembunyikan bagian yang berlebih */
-            border-top: 2px solid white; /* Border atas footer */
-            padding: 5px 0; /* Padding atas dan bawah lebih kecil */
-            font-family: 'Roboto', sans-serif; /* Gaya huruf untuk footer */
-            height: 30px; /* Tinggi footer lebih kecil */
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #041066;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            border-top: 2px solid white;
+            padding: 5px 0;
+            font-family: 'Roboto', sans-serif;
+            height: 30px;
         }
 
         .marquee {
@@ -91,54 +91,51 @@
 
         @keyframes slideInFromBottom {
             from {
-                transform: translateY(100%); /* Mulai dari bawah */
-                opacity: 0; /* Tidak terlihat */
+                transform: translateY(100%);
+                opacity: 0;
             }
             to {
-                transform: translateY(0); /* Akhir di posisi normal */
-                opacity: 1; /* Menjadi terlihat */
+                transform: translateY(0);
+                opacity: 1;
             }
         }
 
         @keyframes slideOutToSide {
             from {
-                transform: translateX(0); /* Posisi awal */
-                opacity: 1; /* Terlihat */
+                transform: translateX(0);
+                opacity: 1;
             }
             to {
-                transform: translateX(100%); /* Geser keluar dari layar */
-                opacity: 0; /* Menghilang */
+                transform: translateX(100%);
+                opacity: 0;
             }
         }
 
         .animatedText {
-            position: absolute; /* Menempatkan teks secara absolut */
-            top: 50%; /* Pusat vertikal */
-            left: 50%; /* Pusat horizontal */
-            transform: translate(-50%, -50%); /* Memusatkan teks */
-            opacity: 0; /* Awal teks tidak terlihat */
-            font-family: 'Roboto', sans-serif; /* Menggunakan font Roboto */
-            color: #041066; /* Warna teks */
-            font-size: 24px; /* Ukuran font untuk footer */
-            transition: opacity 1s, transform 1s; /* Transisi untuk efek muncul dan menghilang */
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            font-family: 'Roboto', sans-serif;
+            color: #041066;
+            font-size: 24px;
+            transition: opacity 1s, transform 1s;
         }
     </style>
 </head>
 <body>
 
-    <!-- Layar loading dengan animasi loading baru -->
     <div id="loadingScreen">
         <div class="loader"></div>
-        <div class="title">TJAHAJA BARU</div> <!-- Teks TJAHAJA BARU -->
+        <div class="title">TJAHAJA BARU</div>
     </div>
 
-    <!-- iframe Google Slides baru -->
     <iframe id="slidesFrame" 
             src="https://docs.google.com/presentation/d/e/2PACX-1vSQ38LjFgAHXbNbfC4gkaOTJsLCCny4BZhxZ3ttF_mD74Onq800eqQhN7pqHnr6fgexDu8dSJv1Fl1d/embed?start=true&loop=true&delayms=30000" 
             allowfullscreen="true">
     </iframe>
 
-    <!-- Footer berjalan -->
     <div id="footer">
         <div class="marquee" id="footerText"></div>
     </div>
@@ -147,13 +144,11 @@
         <div class="animatedText" id="animatedText"></div>
     </div>
 
-    <!-- JavaScript untuk memperbarui iframe dan menampilkan layar loading sementara -->
     <script>
         const iframe = document.getElementById("slidesFrame");
         const loadingScreen = document.getElementById("loadingScreen");
         const footerText = document.getElementById("footerText");
 
-        // Kalimat yang ingin ditampilkan
         const messages = [
             "DISPLAY INFORMASI TJAHAJA BARU : ",
             "FAZIO 2023",
@@ -161,39 +156,36 @@
             "INFORMASI LEBIH LANJUT HUBUNGI HRD"
         ];
 
-        // Fungsi untuk memperbarui teks footer
         function updateFooterText() {
-            // Menampilkan semua kalimat
             messages.forEach((message, index) => {
                 setTimeout(() => {
                     const span = document.createElement('span');
                     span.textContent = message;
-                    span.style.animation = "slideInFromBottom 1s forwards"; // Efek animasi
-                    footerText.appendChild(span); // Menambahkan kalimat ke footer
-                    footerText.appendChild(document.createTextNode("   ")); // Jarak antar kalimat
-                }, index * 2000); // Menampilkan kalimat setiap 2 detik
+                    span.style.animation = "slideInFromBottom 1s forwards";
+                    footerText.appendChild(span);
+                    footerText.appendChild(document.createTextNode("   "));
+                }, index * 2000);
             });
 
-            // Tunggu 30 detik setelah semua kalimat tampil
             setTimeout(() => {
-                footerText.innerHTML = ""; // Menghapus semua kalimat
-                updateFooterText(); // Mulai kembali
-            }, messages.length * 2000 + 15000); // Durasi total untuk reset
+                footerText.innerHTML = "";
+                updateFooterText();
+            }, messages.length * 2000 + 15000);
         }
 
-        // Menghilangkan layar loading dan menampilkan iframe
         setTimeout(() => {
             loadingScreen.style.display = "none"; // Menghilangkan layar loading
             iframe.style.opacity = 1; // Menampilkan iframe
-        }, 3000); // Menunggu 3 detik
+        }, 3000);
 
-        // Menjalankan fungsi untuk memperbarui teks footer
         updateFooterText();
 
         // Mengatur refresh otomatis setiap 3 menit
-        setInterval(() => {
-            location.reload(); // Memuat ulang halaman
-        }, 180000); // 3 menit
+        setTimeout(() => {
+            setInterval(() => {
+                location.reload(); // Memuat ulang halaman
+            }, 180000); // 3 menit
+        }, 3000); // Mulai interval setelah loading selesai
     </script>
 </body>
 </html>
