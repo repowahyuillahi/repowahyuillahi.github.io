@@ -203,7 +203,7 @@
             const minutes = currentDate.getMinutes().toString().padStart(2, '0');  // Mendapatkan menit
             const seconds = currentDate.getSeconds().toString().padStart(2, '0');  // Mendapatkan detik
 
-            timeDisplay.textContent = `${hours}:${minutes}:${seconds} ${dayOfWeek}, ${dayOfMonth} ${month} ${year}`;
+            timeDisplay.textContent = `${dayOfWeek}, ${dayOfMonth} ${month} ${year} ${hours}:${minutes}:${seconds} `;
         }
 
         // Update waktu setiap detik
