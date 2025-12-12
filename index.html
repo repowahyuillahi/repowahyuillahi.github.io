@@ -11,8 +11,8 @@
             width: 100%;
             height: calc(100vh - 50px);
             border: none;
-            opacity: 0; /* Awal iframe tersembunyi */
-            transition: opacity 1s ease-in-out; /* Efek fade-in */
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
         }
 
         /* Gaya layar loading */
@@ -75,18 +75,18 @@
             background-color: rgba(255, 255, 255, 0.8);
             color: #041066;
             display: flex;
-            align-items: center; /* Menyelaraskan secara vertikal */
+            align-items: center;
             overflow: hidden;
             border-top: 2px solid white;
-            padding: 5px 10px; /* Tambah padding untuk estetika */
+            padding: 5px 10px;
             font-family: 'Roboto', sans-serif;
             height: 30px;
         }
 
         /* Gaya untuk teks jam */
         #timeDisplay {
-            margin-left: 10px; /* Menambahkan jarak antara timer dan teks info */
-            white-space: nowrap; /* Menghindari teks terpotong */
+            margin-left: 10px;
+            white-space: nowrap;
             font-weight: bold;
         }
 
@@ -144,7 +144,7 @@
 
     <div id="footer">
         <div id="timeDisplay">00:00:00</div>
-        &nbsp;&nbsp; <!-- Menambahkan dua spasi -->
+        &nbsp;&nbsp;
         <div id="infoText" class="marquee"></div>
     </div>
 
@@ -158,14 +158,23 @@
         const infoText = document.getElementById("infoText");
         const timeDisplay = document.getElementById("timeDisplay");
 
-        const messages = [
-            "DISPLAY INFORMASI TJAHAJA BARU : ",
-            "",
-            "",
-            ""
-        ];
+        // Fungsi untuk mendapatkan running text dari localStorage
+        function getRunningTexts() {
+            const stored = localStorage.getItem('runningTexts');
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    return parsed.filter(text => text.trim() !== '');
+                } catch (e) {
+                    return ["DISPLAY INFORMASI TJAHAJA BARU : "];
+                }
+            }
+            return ["DISPLAY INFORMASI TJAHAJA BARU : "];
+        }
 
         function updateFooterText() {
+            const messages = getRunningTexts();
+            
             messages.forEach((message, index) => {
                 setTimeout(() => {
                     const span = document.createElement('span');
@@ -183,8 +192,8 @@
         }
 
         setTimeout(() => {
-            loadingScreen.style.display = "none"; // Menghilangkan layar loading
-            iframe.style.opacity = 1; // Menampilkan iframe
+            loadingScreen.style.display = "none";
+            iframe.style.opacity = 1;
         }, 3000);
 
         updateFooterText();
@@ -195,19 +204,24 @@
             const monthsOfYear = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
             const currentDate = new Date();
-            const dayOfWeek = daysOfWeek[currentDate.getDay()];  // Mendapatkan nama hari
-            const dayOfMonth = currentDate.getDate();  // Mendapatkan tanggal (hari dalam bulan)
-            const month = monthsOfYear[currentDate.getMonth()];  // Mendapatkan nama bulan
-            const year = currentDate.getFullYear();  // Mendapatkan tahun penuh
-            const hours = currentDate.getHours().toString().padStart(2, '0');  // Mendapatkan jam
-            const minutes = currentDate.getMinutes().toString().padStart(2, '0');  // Mendapatkan menit
-            const seconds = currentDate.getSeconds().toString().padStart(2, '0');  // Mendapatkan detik
+            const dayOfWeek = daysOfWeek[currentDate.getDay()];
+            const dayOfMonth = currentDate.getDate();
+            const month = monthsOfYear[currentDate.getMonth()];
+            const year = currentDate.getFullYear();
+            const hours = currentDate.getHours().toString().padStart(2, '0');
+            const minutes = currentDate.getMinutes().toString().padStart(2, '0');
+            const seconds = currentDate.getSeconds().toString().padStart(2, '0');
 
             timeDisplay.textContent = `${dayOfWeek}, ${dayOfMonth} ${month} ${year} ${hours}:${minutes}:${seconds} `;
         }
 
         // Update waktu setiap detik
         setInterval(updateTime, 1000);
+
+        // Auto reload setiap 45 detik untuk update Google Slides
+        setInterval(() => {
+            location.reload();
+        }, 45000); // 45 detik
 
     </script>
 </body>
