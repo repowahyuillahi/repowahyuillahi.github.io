@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+    <title>Display Informasi Digital Tjahaja Baru</title>
+    <style>
+        /* Gaya untuk iframe agar memenuhi layar */
+        #slidesFrame {
+            width: 100%;
+            height: calc(100vh - 50px);
+            border: none;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        /* Gaya layar loading */
+        #loadingScreen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #ffffff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 1;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Gaya untuk animasi loader */
+        .loader {
+            width: 40px;
+            aspect-ratio: 1;
+            --c: linear-gradient(#000 0 0);
+            --m: radial-gradient(farthest-side,#000 92%,#0000);
+            background: 
+                var(--c),var(--m),
+                var(--c),var(--m), 
+                var(--c),var(--m);
+            background-size: 8px 12px,8px 8px;
+            background-repeat: no-repeat;
+            animation: l17 1s infinite linear;
+        }
+
+        @keyframes l17 {
+            0%,5% {background-position: 0 50%, 0 0, 50% 50%, 50% 0, 100% 50%, 100% 0}
+            12.5% {background-position: 0 50%, 0 calc(50% - 10px), 50% 50%, 50% 0, 100% 50%, 100% 0}
+            25%   {background-position: 0 calc(50% + 10px), 0 50%, 50% 50%, 50% 0, 100% 50%, 100% 0}
+            37.5% {background-position: 0 calc(50% + 10px), 0 50%, 50% 50%, 50% calc(50% - 10px), 100% 50%, 100% 0}
+            50%   {background-position: 0 50%, 0 0, 50% 50%, 50% 0, 100% 50%, 100% 0}
+            62.5% {background-position: 0 50%, 0 0, 50% calc(50% + 10px), 50% 50%, 100% 50%, 100% calc(50% - 10px)}
+            75%   {background-position: 0 50%, 0 0, 50% 50%, 50% 0, 100% calc(50 + 10px), 100% 50%}
+            87.5% {background-position: 0 50%, 0 0, 50% 50%, 50% 0, 100% calc(50 + 10px), 100% 50%}
+            95%, 100%  {background-position: 0 50%, 0 0, 50% 50%, 50% 0, 100% 50%, 100% 0}
+        }
+
+        /* Gaya untuk teks TJAHAJA BARU */
+        .title {
+            font-weight: bold;
+            font-size: 36px;
+            color: #041066;
+            margin-top: 20px;
+        }
+
+        /* Gaya footer berjalan */
+        #footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #041066;
+            display: flex;
+            align-items: center;
+            overflow: hidden;
+            border-top: 2px solid white;
+            padding: 5px 10px;
+            font-family: 'Roboto', sans-serif;
+            height: 30px;
+        }
+
+        /* Gaya untuk teks jam */
+        #timeDisplay {
+            margin-left: 10px;
+            white-space: nowrap;
+            font-weight: bold;
+        }
+
+        .marquee {
+            display: inline-block;
+            white-space: nowrap;
+        }
+
+        @keyframes slideInFromBottom {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutToSide {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+        }
+
+        .animatedText {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0;
+            font-family: 'Roboto', sans-serif;
+            color: #041066;
+            font-size: 24px;
+            transition: opacity 1s, transform 1s;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loadingScreen">
+        <div class="loader"></div>
+        <div class="title">TJAHAJA BARU</div>
+    </div>
+
+    <iframe id="slidesFrame" 
+            src="https://docs.google.com/presentation/d/e/2PACX-1vSQ38LjFgAHXbNbfC4gkaOTJsLCCny4BZhxZ3ttF_mD74Onq800eqQhN7pqHnr6fgexDu8dSJv1Fl1d/embed?start=true&loop=true&delayms=30000" 
+            allowfullscreen="true">
+    </iframe>
+
+    <div id="footer">
+        <div id="timeDisplay">00:00:00</div>
+        &nbsp;&nbsp;
+        <div id="infoText" class="marquee"></div>
+    </div>
+
+    <div id="animatedTextContainer">
+        <div class="animatedText" id="animatedText"></div>
+    </div>
+
+    <script>
+        const iframe = document.getElementById("slidesFrame");
+        const loadingScreen = document.getElementById("loadingScreen");
+        const infoText = document.getElementById("infoText");
+        const timeDisplay = document.getElementById("timeDisplay");
+
+        // Fungsi untuk mendapatkan running text dari localStorage
+        function getRunningTexts() {
+            const stored = localStorage.getItem('runningTexts');
+            if (stored) {
+                try {
+                    const parsed = JSON.parse(stored);
+                    return parsed.filter(text => text.trim() !== '');
+                } catch (e) {
+                    return ["DISPLAY INFORMASI TJAHAJA BARU : "];
+                }
+            }
+            return ["DISPLAY INFORMASI TJAHAJA BARU : "];
+        }
+
+        function updateFooterText() {
+            const messages = getRunningTexts();
+            
+            messages.forEach((message, index) => {
+                setTimeout(() => {
+                    const span = document.createElement('span');
+                    span.textContent = message;
+                    span.style.animation = "slideInFromBottom 1s forwards";
+                    infoText.appendChild(span);
+                    infoText.appendChild(document.createTextNode("   "));
+                }, index * 2000);
+            });
+
+            setTimeout(() => {
+                infoText.innerHTML = "";
+                updateFooterText();
+            }, messages.length * 2000 + 15000);
+        }
+
+        setTimeout(() => {
+            loadingScreen.style.display = "none";
+            iframe.style.opacity = 1;
+        }, 3000);
+
+        updateFooterText();
+
+        // Menampilkan waktu terkini dengan hari, bulan, dan tahun
+        function updateTime() {
+            const daysOfWeek = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+            const monthsOfYear = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+            const currentDate = new Date();
+            const dayOfWeek = daysOfWeek[currentDate.getDay()];
+            const dayOfMonth = currentDate.getDate();
+            const month = monthsOfYear[currentDate.getMonth()];
+            const year = currentDate.getFullYear();
+            const hours = currentDate.getHours().toString().padStart(2, '0');
+            const minutes = currentDate.getMinutes().toString().padStart(2, '0');
+            const seconds = currentDate.getSeconds().toString().padStart(2, '0');
+
+            timeDisplay.textContent = `${dayOfWeek}, ${dayOfMonth} ${month} ${year} ${hours}:${minutes}:${seconds} `;
+        }
+
+        // Update waktu setiap detik
+        setInterval(updateTime, 1000);
+
+        // Auto reload setiap 45 detik untuk update Google Slides
+        setInterval(() => {
+            location.reload();
+        }, 45000); // 45 detik
+
+    </script>
+</body>
+</html>
