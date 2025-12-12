@@ -194,7 +194,7 @@
         function updateMarqueeText() {
             const messages = getRunningTexts();
             const scrollSpeed = getScrollSpeed();
-            const fullText = messages.join(' ★★★ ') + ' ★★★ '; // Gabungkan semua teks dengan separator
+            const fullText = messages.join(' || ') + ' || '; // Gabungkan semua teks dengan separator
             
             marqueeText.innerHTML = fullText + fullText + fullText; // Duplikasi untuk seamless loop
             
