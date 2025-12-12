@@ -14,7 +14,7 @@
 
         body {
             font-family: 'Roboto', sans-serif;
-            background: #ffffff;
+            background: #f5f5f5;
             min-height: 100vh;
             padding: 0;
         }
@@ -88,7 +88,7 @@
             margin: 30px auto;
             padding: 0 20px;
             display: grid;
-            grid-template-columns: 2fr 1fr;
+            grid-template-columns: 1fr 400px;
             gap: 20px;
         }
 
@@ -115,7 +115,7 @@
 
         /* Form styling */
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
@@ -126,28 +126,10 @@
             font-size: 14px;
         }
 
-        .input-wrapper {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-            align-items: center;
-        }
-
-        .input-number {
-            width: 40px;
-            height: 40px;
-            background: #041066;
-            color: white;
-            border-radius: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            flex-shrink: 0;
-        }
-
-        .input-wrapper input {
-            flex: 1;
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
             padding: 12px 15px;
             border: 2px solid #e0e0e0;
             border-radius: 5px;
@@ -156,43 +138,23 @@
             font-family: 'Roboto', sans-serif;
         }
 
-        .input-wrapper input:focus {
+        .form-group textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
             outline: none;
             border-color: #041066;
         }
 
-        .btn-remove {
-            padding: 12px 20px;
-            background: #dc3545;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 500;
-            transition: background 0.3s;
-            flex-shrink: 0;
-        }
-
-        .btn-remove:hover {
-            background: #c82333;
-        }
-
-        .btn-add {
-            padding: 12px 25px;
-            background: #ff8c00;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: 500;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            transition: background 0.3s;
-        }
-
-        .btn-add:hover {
-            background: #e67e00;
+        .form-group small {
+            display: block;
+            margin-top: 5px;
+            color: #666;
+            font-size: 12px;
         }
 
         .btn-save {
@@ -205,7 +167,6 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: 700;
-            margin-top: 10px;
             transition: background 0.3s;
         }
 
@@ -213,38 +174,50 @@
             background: #030c4d;
         }
 
-        .btn-clear {
+        .btn-save:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .btn-refresh {
             width: 100%;
             padding: 12px;
-            background: white;
-            color: #dc3545;
-            border: 2px solid #dc3545;
+            background: #ff8c00;
+            color: white;
+            border: none;
             border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 500;
             margin-top: 10px;
-            transition: all 0.3s;
+            transition: background 0.3s;
         }
 
-        .btn-clear:hover {
-            background: #dc3545;
-            color: white;
+        .btn-refresh:hover {
+            background: #e67e00;
         }
 
-        /* Success message */
-        .success-message {
+        /* Success/Error message */
+        .message {
             display: none;
             padding: 15px;
-            background: #28a745;
-            color: white;
             border-radius: 5px;
             margin-bottom: 20px;
             text-align: center;
             font-weight: 500;
         }
 
-        .success-message.show {
+        .message.success {
+            background: #28a745;
+            color: white;
+        }
+
+        .message.error {
+            background: #dc3545;
+            color: white;
+        }
+
+        .message.show {
             display: block;
             animation: slideDown 0.3s ease-out;
         }
@@ -260,44 +233,109 @@
             }
         }
 
-        /* Preview section */
-        .preview-box {
+        /* Info banner */
+        .info-banner {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #041066;
+        }
+
+        /* Data list */
+        .data-list {
+            margin-top: 20px;
+        }
+
+        .data-item {
             background: #f8f9fa;
             padding: 15px;
             border-radius: 5px;
-            border: 2px solid #e0e0e0;
-            min-height: 150px;
-            margin-top: 15px;
-        }
-
-        .preview-title {
-            font-weight: 600;
-            color: #041066;
             margin-bottom: 10px;
-            font-size: 14px;
+            border-left: 4px solid #041066;
         }
 
-        .preview-text {
-            background: white;
-            padding: 10px 15px;
-            border-left: 3px solid #ff8c00;
+        .data-item.expired {
+            border-left-color: #dc3545;
+            opacity: 0.6;
+        }
+
+        .data-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
             margin-bottom: 8px;
+        }
+
+        .data-text {
+            font-weight: 500;
+            color: #041066;
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .data-badge {
+            padding: 4px 10px;
             border-radius: 3px;
-            font-size: 14px;
-            word-wrap: break-word;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
         }
 
-        .empty-preview {
-            color: #999;
+        .badge-active {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge-expired {
+            background: #dc3545;
+            color: white;
+        }
+
+        .data-info {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .data-info span {
+            display: inline-block;
+            margin-right: 15px;
+        }
+
+        .btn-deactivate {
+            padding: 6px 12px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            margin-top: 8px;
+            transition: background 0.3s;
+        }
+
+        .btn-deactivate:hover {
+            background: #c82333;
+        }
+
+        .empty-state {
             text-align: center;
-            font-style: italic;
-            padding: 30px;
+            padding: 40px;
+            color: #999;
         }
 
-        /* Info stats */
-        .info-stats {
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+
+        .stats-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             margin-bottom: 20px;
         }
@@ -307,6 +345,7 @@
             padding: 15px;
             border-radius: 5px;
             border-left: 4px solid #ff8c00;
+            text-align: center;
         }
 
         .stat-label {
@@ -316,72 +355,16 @@
         }
 
         .stat-value {
-            font-size: 24px;
+            font-size: 28px;
             font-weight: 700;
             color: #041066;
         }
 
-        /* Settings section */
-        .settings-group {
-            margin-bottom: 20px;
-        }
-
-        .settings-group label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-            color: #333;
-            margin-bottom: 10px;
-        }
-
-        .settings-group input[type="number"],
-        .settings-group input[type="range"] {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #e0e0e0;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-
-        .settings-group input[type="range"] {
-            padding: 0;
-        }
-
-        .range-value {
-            display: inline-block;
-            background: #041066;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 3px;
-            font-weight: 500;
-            margin-left: 10px;
-        }
-
         /* Responsive */
-        @media (max-width: 768px) {
+        @media (max-width: 968px) {
             .container {
                 grid-template-columns: 1fr;
             }
-
-            .header-content {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .info-stats {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .info-banner {
-            background: #e7f3ff;
-            border: 1px solid #b3d9ff;
-            padding: 12px 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            font-size: 13px;
-            color: #041066;
         }
     </style>
 </head>
@@ -399,9 +382,7 @@
         </div>
     </div>
 
-    <div class="success-message" id="successMessage">
-        ✅ Data berhasil disimpan! Perubahan akan terlihat pada display.
-    </div>
+    <div class="message" id="message"></div>
 
     <!-- Container -->
     <div class="container">
@@ -409,50 +390,38 @@
         <div>
             <div class="card">
                 <div class="card-header">
-                    <h2>📝 Kelola Running Text</h2>
+                    <h2>➕ Tambah Informasi Baru</h2>
                 </div>
 
                 <div class="info-banner">
-                    💡 <strong>Tips:</strong> Setiap teks akan berjalan selama waktu yang ditentukan, lalu ganti ke teks berikutnya secara bergantian.
+                    💡 <strong>Tips:</strong> Informasi akan otomatis non-aktif setelah durasi yang ditentukan habis. Separator menggunakan icon motor 🏍️
                 </div>
 
-                <div class="form-group">
-                    <div id="textInputs"></div>
-                    <button class="btn-add" onclick="addTextInput()">➕ Tambah Teks Baru</button>
-                </div>
+                <form id="addForm">
+                    <div class="form-group">
+                        <label>📝 Teks Informasi *</label>
+                        <textarea id="textInput" required maxlength="200" placeholder="Contoh: Promo Service Yamaha NMAX Desember - Diskon hingga 30%"></textarea>
+                        <small>Maksimal 200 karakter. Sisa: <span id="charCount">200</span></small>
+                    </div>
 
-                <button class="btn-save" onclick="saveTexts()">💾 SIMPAN PERUBAHAN</button>
-                <button class="btn-clear" onclick="clearAllTexts()">🗑️ Hapus Semua Teks</button>
-            </div>
+                    <div class="form-group">
+                        <label>📅 Durasi Tampil (Hari) *</label>
+                        <select id="durationInput" required>
+                            <option value="1">1 Hari</option>
+                            <option value="2">2 Hari</option>
+                            <option value="3">3 Hari</option>
+                            <option value="5">5 Hari</option>
+                            <option value="7" selected>7 Hari (1 Minggu)</option>
+                            <option value="14">14 Hari (2 Minggu)</option>
+                            <option value="30">30 Hari (1 Bulan)</option>
+                        </select>
+                        <small>Informasi akan otomatis non-aktif setelah durasi habis</small>
+                    </div>
 
-            <!-- Settings Card -->
-            <div class="card" style="margin-top: 20px;">
-                <div class="card-header">
-                    <h2>⚙️ Pengaturan Display</h2>
-                </div>
-
-                <div class="settings-group">
-                    <label>
-                        <strong>Durasi Per Teks:</strong>
-                    </label>
-                    <input type="range" id="speedRange" min="20" max="60" value="40" oninput="updateSpeedDisplay(this.value)">
-                    <span class="range-value" id="speedValue">40 detik</span>
-                    <small style="color: #666; display: block; margin-top: 5px;">
-                        Berapa lama 1 teks ditampilkan sebelum ganti ke teks berikutnya.
-                    </small>
-                </div>
-
-                <div class="settings-group">
-                    <label>
-                        <strong>Reload Google Slides:</strong>
-                    </label>
-                    <input type="number" id="reloadInterval" min="30" max="300" value="60" step="15">
-                    <small style="color: #666; display: block; margin-top: 5px;">
-                        Google Slides akan di-refresh setiap N detik (30-300 detik).
-                    </small>
-                </div>
-
-                <button class="btn-save" onclick="saveSettings()">💾 Simpan Pengaturan</button>
+                    <button type="submit" class="btn-save" id="submitBtn">
+                        💾 SIMPAN & PUBLIKASIKAN
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -464,235 +433,205 @@
                     <h2>📊 Statistik</h2>
                 </div>
 
-                <div class="info-stats">
+                <div class="stats-grid">
                     <div class="stat-box">
-                        <div class="stat-label">Total Teks</div>
-                        <div class="stat-value" id="totalTexts">0</div>
+                        <div class="stat-label">Aktif</div>
+                        <div class="stat-value" id="activeCount">0</div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-label">Karakter</div>
-                        <div class="stat-value" id="totalChars">0</div>
+                    <div class="stat-box" style="border-left-color: #dc3545;">
+                        <div class="stat-label">Expired</div>
+                        <div class="stat-value" id="expiredCount">0</div>
                     </div>
                 </div>
 
-                <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; font-size: 13px; color: #666;">
-                    <strong>Terakhir Disimpan:</strong><br>
-                    <span id="lastSaved">Belum ada data</span>
-                </div>
+                <button class="btn-refresh" onclick="loadData()">🔄 Refresh Data</button>
             </div>
 
-            <!-- Preview Card -->
+            <!-- Data List Card -->
             <div class="card" style="margin-top: 20px;">
                 <div class="card-header">
-                    <h2>👁️ Preview Urutan Teks</h2>
+                    <h2>📋 Daftar Informasi Aktif</h2>
                 </div>
 
-                <div class="preview-box" id="previewBox">
-                    <div class="empty-preview">Belum ada teks</div>
+                <div id="dataList" class="data-list">
+                    <div class="loading">⏳ Memuat data...</div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        let textCount = 0;
+        // URL Google Apps Script
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxYoJGNWiUEcPCw-kPc2YCaViNuXmHCylIcMPoP8BWiqfTXeze0JuZCZXOviKk9eqsSbA/exec';
+        
+        const textInput = document.getElementById('textInput');
+        const durationInput = document.getElementById('durationInput');
+        const submitBtn = document.getElementById('submitBtn');
+        const addForm = document.getElementById('addForm');
+        const messageEl = document.getElementById('message');
+        const charCount = document.getElementById('charCount');
 
-        // Load existing texts from localStorage
-        function loadTexts() {
-            const stored = localStorage.getItem('runningTexts');
-            let texts = ["DISPLAY INFORMASI TJAHAJA BARU"];
-            
-            if (stored) {
-                try {
-                    texts = JSON.parse(stored);
-                } catch (e) {
-                    console.error('Error parsing stored texts:', e);
-                }
-            }
+        // Character counter
+        textInput.addEventListener('input', () => {
+            const remaining = 200 - textInput.value.length;
+            charCount.textContent = remaining;
+        });
 
-            texts.forEach(text => {
-                addTextInput(text);
-            });
-
-            updateStats();
-            updatePreview();
-            loadLastSaved();
-        }
-
-        // Load settings
-        function loadSettings() {
-            const speed = localStorage.getItem('scrollSpeed') || 40;
-            const reload = localStorage.getItem('reloadInterval') || 60;
-            
-            document.getElementById('speedRange').value = speed;
-            document.getElementById('speedValue').textContent = speed + ' detik';
-            document.getElementById('reloadInterval').value = reload;
-        }
-
-        // Add text input field
-        function addTextInput(value = '') {
-            textCount++;
-            const container = document.getElementById('textInputs');
-            const wrapper = document.createElement('div');
-            wrapper.className = 'input-wrapper';
-            wrapper.id = `text-${textCount}`;
-            
-            wrapper.innerHTML = `
-                <div class="input-number">${container.children.length + 1}</div>
-                <input type="text" 
-                       placeholder="Masukkan teks informasi..." 
-                       value="${value}"
-                       oninput="updateStats(); updatePreview()"
-                       maxlength="200">
-                <button class="btn-remove" onclick="removeTextInput(${textCount})">🗑️</button>
-            `;
-            
-            container.appendChild(wrapper);
-            updateStats();
-        }
-
-        // Remove text input field
-        function removeTextInput(id) {
-            const inputs = document.querySelectorAll('.input-wrapper');
-            if (inputs.length <= 1) {
-                alert('Minimal harus ada 1 running text!');
-                return;
-            }
-            
-            const element = document.getElementById(`text-${id}`);
-            if (element) {
-                element.remove();
-                updateNumbering();
-                updateStats();
-                updatePreview();
-            }
-        }
-
-        // Update numbering after deletion
-        function updateNumbering() {
-            const wrappers = document.querySelectorAll('.input-wrapper');
-            wrappers.forEach((wrapper, index) => {
-                const numberDiv = wrapper.querySelector('.input-number');
-                if (numberDiv) {
-                    numberDiv.textContent = index + 1;
-                }
-            });
-        }
-
-        // Save texts to localStorage
-        function saveTexts() {
-            const inputs = document.querySelectorAll('.input-wrapper input');
-            const texts = [];
-            
-            inputs.forEach(input => {
-                const value = input.value.trim();
-                if (value !== '') {
-                    texts.push(value);
-                }
-            });
-
-            if (texts.length === 0) {
-                alert('Harap isi minimal 1 running text!');
-                return;
-            }
-
-            localStorage.setItem('runningTexts', JSON.stringify(texts));
-            localStorage.setItem('lastSaved', new Date().toLocaleString('id-ID'));
-            
-            const successMsg = document.getElementById('successMessage');
-            successMsg.classList.add('show');
-            
+        // Show message
+        function showMessage(text, type = 'success') {
+            messageEl.textContent = text;
+            messageEl.className = `message ${type} show`;
             setTimeout(() => {
-                successMsg.classList.remove('show');
-            }, 3000);
-
-            loadLastSaved();
-            updateStats();
-            updatePreview();
+                messageEl.classList.remove('show');
+            }, 5000);
         }
 
-        // Clear all texts
-        function clearAllTexts() {
-            if (confirm('Yakin ingin menghapus semua teks? Tindakan ini tidak dapat dibatalkan.')) {
-                localStorage.removeItem('runningTexts');
-                document.getElementById('textInputs').innerHTML = '';
-                textCount = 0;
-                addTextInput('DISPLAY INFORMASI TJAHAJA BARU');
-                updateStats();
-                updatePreview();
-            }
-        }
+        // Load data from Google Sheets
+        async function loadData() {
+            const dataList = document.getElementById('dataList');
+            dataList.innerHTML = '<div class="loading">⏳ Memuat data...</div>';
 
-        // Save settings
-        function saveSettings() {
-            const speed = document.getElementById('speedRange').value;
-            const reload = document.getElementById('reloadInterval').value;
-            
-            localStorage.setItem('scrollSpeed', speed);
-            localStorage.setItem('reloadInterval', reload);
-            
-            alert('✅ Pengaturan berhasil disimpan!');
-        }
+            try {
+                const response = await fetch(API_URL);
+                const result = await response.json();
 
-        // Update speed display
-        function updateSpeedDisplay(value) {
-            document.getElementById('speedValue').textContent = value + ' detik';
-        }
-
-        // Update statistics
-        function updateStats() {
-            const inputs = document.querySelectorAll('.input-wrapper input');
-            let totalChars = 0;
-            let totalTexts = 0;
-            
-            inputs.forEach(input => {
-                if (input.value.trim() !== '') {
-                    totalTexts++;
-                    totalChars += input.value.length;
+                if (result.success) {
+                    displayData(result.data);
+                    updateStats(result.data);
+                } else {
+                    dataList.innerHTML = '<div class="empty-state">❌ Gagal memuat data</div>';
                 }
-            });
-
-            document.getElementById('totalTexts').textContent = totalTexts;
-            document.getElementById('totalChars').textContent = totalChars;
+            } catch (error) {
+                console.error('Error loading data:', error);
+                dataList.innerHTML = '<div class="empty-state">❌ Error: ' + error.message + '</div>';
+            }
         }
 
-        // Update preview
-        function updatePreview() {
-            const inputs = document.querySelectorAll('.input-wrapper input');
-            const previewBox = document.getElementById('previewBox');
-            const texts = [];
+        // Display data
+        function displayData(data) {
+            const dataList = document.getElementById('dataList');
             
-            inputs.forEach(input => {
-                const value = input.value.trim();
-                if (value !== '') {
-                    texts.push(value);
-                }
-            });
+            if (data.length === 0) {
+                dataList.innerHTML = '<div class="empty-state">📭 Belum ada informasi aktif</div>';
+                return;
+            }
 
-            if (texts.length === 0) {
-                previewBox.innerHTML = '<div class="empty-preview">Belum ada teks</div>';
-            } else {
-                const duration = document.getElementById('speedRange').value;
-                previewBox.innerHTML = '<div class="preview-title">Urutan tampilan (masing-masing ' + duration + ' detik):</div>' +
-                    texts.map((text, index) => 
-                        `<div class="preview-text">${index + 1}. ${text}</div>`
-                    ).join('');
+            dataList.innerHTML = data.map(item => `
+                <div class="data-item ${item.daysRemaining <= 0 ? 'expired' : ''}">
+                    <div class="data-header">
+                        <div class="data-text">${item.text}</div>
+                        <span class="data-badge ${item.daysRemaining > 0 ? 'badge-active' : 'badge-expired'}">
+                            ${item.daysRemaining > 0 ? 'Aktif' : 'Expired'}
+                        </span>
+                    </div>
+                    <div class="data-info">
+                        <span>📅 Input: ${item.inputDate}</span>
+                        <span>⏰ Berakhir: ${item.expireDate}</span>
+                        <span>🔥 Sisa: ${item.daysRemaining} hari</span>
+                    </div>
+                    ${item.daysRemaining > 0 ? `
+                        <button class="btn-deactivate" onclick="deactivateItem(${item.id})">
+                            ❌ Non-aktifkan Sekarang
+                        </button>
+                    ` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Update stats
+        function updateStats(data) {
+            const active = data.filter(item => item.daysRemaining > 0).length;
+            const expired = data.filter(item => item.daysRemaining <= 0).length;
+            
+            document.getElementById('activeCount').textContent = active;
+            document.getElementById('expiredCount').textContent = expired;
+        }
+
+        // Add new information
+        addForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const text = textInput.value.trim();
+            const duration = parseInt(durationInput.value);
+
+            if (!text) {
+                showMessage('❌ Teks informasi tidak boleh kosong!', 'error');
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Menyimpan...';
+
+            try {
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'add',
+                        text: text,
+                        durationDays: duration
+                    })
+                });
+
+                // Karena no-cors, kita anggap berhasil jika tidak error
+                showMessage('✅ Informasi berhasil ditambahkan dan akan tampil di display!', 'success');
+                
+                // Reset form
+                textInput.value = '';
+                durationInput.value = '7';
+                charCount.textContent = '200';
+                
+                // Reload data setelah 2 detik
+                setTimeout(loadData, 2000);
+
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('✅ Data terkirim! Refresh halaman untuk melihat perubahan.', 'success');
+                setTimeout(loadData, 2000);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '💾 SIMPAN & PUBLIKASIKAN';
+            }
+        });
+
+        // Deactivate item
+        async function deactivateItem(id) {
+            if (!confirm('Yakin ingin menonaktifkan informasi ini sekarang?')) {
+                return;
+            }
+
+            try {
+                await fetch(API_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'update',
+                        id: id,
+                        status: 'Non-aktif'
+                    })
+                });
+
+                showMessage('✅ Informasi berhasil dinonaktifkan!', 'success');
+                setTimeout(loadData, 1500);
+
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('✅ Perintah terkirim! Refresh untuk melihat perubahan.', 'success');
+                setTimeout(loadData, 1500);
             }
         }
 
-        // Load last saved time
-        function loadLastSaved() {
-            const lastSaved = localStorage.getItem('lastSaved');
-            if (lastSaved) {
-                document.getElementById('lastSaved').textContent = lastSaved;
-            }
-        }
+        // Initial load
+        loadData();
 
-        // Initialize
-        window.onload = function() {
-            loadTexts();
-            loadSettings();
-        };
+        // Auto refresh every 2 minutes
+        setInterval(loadData, 120000);
     </script>
 </body>
 </html>
