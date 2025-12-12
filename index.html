@@ -6,7 +6,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
     <title>Display Informasi Digital Tjahaja Baru</title>
     <style>
-        /* Gaya untuk iframe agar memenuhi layar */
         #slidesFrame {
             width: 100%;
             height: calc(100vh - 50px);
@@ -15,7 +14,6 @@
             transition: opacity 1s ease-in-out;
         }
 
-        /* Gaya layar loading */
         #loadingScreen {
             position: absolute;
             top: 0;
@@ -31,7 +29,6 @@
             font-family: Arial, sans-serif;
         }
 
-        /* Gaya untuk animasi loader */
         .loader {
             width: 40px;
             aspect-ratio: 1;
@@ -58,7 +55,6 @@
             95%, 100%  {background-position: 0 50%, 0 0, 50% 50%, 50% 0, 100% 50%, 100% 0}
         }
 
-        /* Gaya untuk teks TJAHAJA BARU */
         .title {
             font-weight: bold;
             font-size: 36px;
@@ -66,39 +62,37 @@
             margin-top: 20px;
         }
 
-        /* Gaya footer berjalan */
         #footer {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.95);
             color: #041066;
             display: flex;
             align-items: center;
             overflow: hidden;
-            border-top: 2px solid white;
+            border-top: 3px solid #041066;
             padding: 5px 0;
             font-family: 'Roboto', sans-serif;
-            height: 40px;
+            height: 45px;
             z-index: 999;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
         }
 
-        /* Gaya untuk teks jam */
         #timeDisplay {
-            padding: 0 15px;
+            padding: 0 20px;
             white-space: nowrap;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 17px;
             background-color: #041066;
             color: white;
             height: 100%;
             display: flex;
             align-items: center;
-            min-width: 300px;
+            min-width: 350px;
         }
 
-        /* Container untuk running text */
         .marquee-container {
             flex: 1;
             overflow: hidden;
@@ -106,15 +100,14 @@
             height: 100%;
         }
 
-        /* Running text yang berjalan */
         .marquee {
             display: inline-block;
             white-space: nowrap;
             padding-left: 100%;
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 500;
-            line-height: 40px;
-            animation: scroll-left 30s linear infinite;
+            line-height: 45px;
+            animation: scroll-left 35s linear infinite;
         }
 
         @keyframes scroll-left {
@@ -124,18 +117,6 @@
             100% {
                 transform: translateX(-100%);
             }
-        }
-
-        .animatedText {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            opacity: 0;
-            font-family: 'Roboto', sans-serif;
-            color: #041066;
-            font-size: 24px;
-            transition: opacity 1s, transform 1s;
         }
     </style>
 </head>
@@ -154,15 +135,14 @@
     <div id="footer">
         <div id="timeDisplay">00:00:00</div>
         <div class="marquee-container">
-            <div id="marqueeText" class="marquee"></div>
+            <div id="marqueeText" class="marquee">Memuat informasi...</div>
         </div>
     </div>
 
-    <div id="animatedTextContainer">
-        <div class="animatedText" id="animatedText"></div>
-    </div>
-
     <script>
+        // !!! GANTI INI DENGAN URL APPS SCRIPT ANDA !!!
+        const API_URL = 'https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec';
+        
         const iframe = document.getElementById("slidesFrame");
         const loadingScreen = document.getElementById("loadingScreen");
         const marqueeText = document.getElementById("marqueeText");
@@ -171,64 +151,64 @@
         let currentTextIndex = 0;
         let runningTexts = [];
 
-        // Fungsi untuk mendapatkan running text dari localStorage
-        function getRunningTexts() {
-            const stored = localStorage.getItem('runningTexts');
-            if (stored) {
-                try {
-                    const parsed = JSON.parse(stored);
-                    return parsed.filter(text => text.trim() !== '');
-                } catch (e) {
-                    return ["DISPLAY INFORMASI TJAHAJA BARU"];
+        // Fetch data dari Google Sheets
+        async function fetchRunningTexts() {
+            try {
+                const response = await fetch(API_URL);
+                const result = await response.json();
+                
+                if (result.success && result.data.length > 0) {
+                    runningTexts = result.data;
+                    console.log('Loaded texts:', runningTexts);
+                } else {
+                    runningTexts = [{
+                        text: 'DISPLAY INFORMASI TJAHAJA BARU',
+                        daysRemaining: 999
+                    }];
                 }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+                runningTexts = [{
+                    text: 'DISPLAY INFORMASI TJAHAJA BARU',
+                    daysRemaining: 999
+                }];
             }
-            return ["DISPLAY INFORMASI TJAHAJA BARU"];
         }
 
-        // Fungsi untuk mendapatkan durasi per teks dari localStorage
-        function getTextDuration() {
-            const duration = localStorage.getItem('scrollSpeed');
-            return duration ? parseInt(duration) * 1000 : 40000; // Default 40 detik, convert ke milliseconds
-        }
-
-        // Fungsi untuk mendapatkan interval reload slide dari localStorage
-        function getSlideReloadInterval() {
-            const interval = localStorage.getItem('reloadInterval');
-            return interval ? parseInt(interval) * 1000 : 60000; // Default 60 detik
-        }
-
-        // Fungsi untuk menampilkan 1 teks running
+        // Tampilkan teks satu per satu dengan kecepatan optimal untuk usia 40+
         function showNextText() {
-            runningTexts = getRunningTexts(); // Refresh data dari localStorage
+            if (runningTexts.length === 0) return;
             
-            if (runningTexts.length === 0) {
-                runningTexts = ["DISPLAY INFORMASI TJAHAJA BARU"];
-            }
-
-            // Reset index jika sudah habis
             if (currentTextIndex >= runningTexts.length) {
                 currentTextIndex = 0;
             }
 
-            const currentText = runningTexts[currentTextIndex];
+            const currentText = runningTexts[currentTextIndex].text;
+            const daysLeft = runningTexts[currentTextIndex].daysRemaining;
             
-            // Duplikasi teks untuk seamless loop
-            marqueeText.textContent = currentText + ' || ' + currentText + ' || ' + currentText + ' || ';
+            // Tambah info sisa hari jika kurang dari 3 hari
+            let displayText = currentText;
+            if (daysLeft <= 3 && daysLeft > 0) {
+                displayText += ` (Berakhir ${daysLeft} hari lagi)`;
+            }
             
-            // Reset animasi
+            // Separator motor Yamaha 🏍️
+            const separator = ' 🏍️ ';
+            marqueeText.textContent = displayText + separator + displayText + separator + displayText + separator;
+            
+            // Reset animasi dengan kecepatan yang nyaman dibaca (35 detik per loop)
             marqueeText.style.animation = 'none';
             setTimeout(() => {
-                marqueeText.style.animation = 'scroll-left 30s linear infinite';
+                marqueeText.style.animation = 'scroll-left 35s linear infinite';
             }, 10);
 
             currentTextIndex++;
 
-            // Ganti ke teks berikutnya setelah durasi selesai
-            const duration = getTextDuration();
-            setTimeout(showNextText, duration);
+            // Ganti teks setiap 50 detik (kecepatan baca optimal untuk usia 40+)
+            setTimeout(showNextText, 50000);
         }
 
-        // Fungsi untuk reload HANYA iframe (Google Slides)
+        // Reload hanya iframe Google Slides
         function reloadSlides() {
             const currentSrc = iframe.src;
             iframe.src = '';
@@ -237,12 +217,7 @@
             }, 100);
         }
 
-        setTimeout(() => {
-            loadingScreen.style.display = "none";
-            iframe.style.opacity = 1;
-        }, 3000);
-
-        // Menampilkan waktu terkini dengan hari, bulan, dan tahun
+        // Update waktu
         function updateTime() {
             const daysOfWeek = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
             const monthsOfYear = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
@@ -259,21 +234,27 @@
             timeDisplay.textContent = `${dayOfWeek}, ${dayOfMonth} ${month} ${year} | ${hours}:${minutes}:${seconds}`;
         }
 
-        // Update waktu setiap detik
+        // Initialize
+        setTimeout(() => {
+            loadingScreen.style.display = "none";
+            iframe.style.opacity = 1;
+        }, 3000);
+
         setInterval(updateTime, 1000);
         updateTime();
 
-        // Mulai running text pertama
-        showNextText();
+        // Load data dan mulai running text
+        fetchRunningTexts().then(() => {
+            showNextText();
+        });
 
-        // Reload HANYA Google Slides dengan interval dari localStorage
-        const slideReloadInterval = getSlideReloadInterval();
-        setInterval(reloadSlides, slideReloadInterval);
+        // Refresh data dari Google Sheets setiap 2 menit
+        setInterval(fetchRunningTexts, 120000);
 
-        // Debug info
-        console.log('Durasi per teks:', getTextDuration() / 1000 + ' detik');
-        console.log('Reload Slide Interval:', getSlideReloadInterval() / 1000 + ' detik');
+        // Reload Google Slides setiap 60 detik
+        setInterval(reloadSlides, 60000);
 
+        console.log('Display sistem aktif - Kecepatan optimal untuk usia 40+ tahun');
     </script>
 </body>
 </html>
