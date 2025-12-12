@@ -413,7 +413,7 @@
                 </div>
 
                 <div class="info-banner">
-                    💡 <strong>Tips:</strong> Running text akan berjalan dari kanan ke kiri seperti berita TV. Pisahkan setiap info penting di kolom berbeda.
+                    💡 <strong>Tips:</strong> Setiap teks akan berjalan selama waktu yang ditentukan, lalu ganti ke teks berikutnya secara bergantian.
                 </div>
 
                 <div class="form-group">
@@ -433,22 +433,22 @@
 
                 <div class="settings-group">
                     <label>
-                        <strong>Kecepatan Running Text:</strong>
+                        <strong>Durasi Per Teks:</strong>
                     </label>
-                    <input type="range" id="speedRange" min="10" max="40" value="25" oninput="updateSpeedDisplay(this.value)">
-                    <span class="range-value" id="speedValue">25 detik</span>
+                    <input type="range" id="speedRange" min="20" max="60" value="40" oninput="updateSpeedDisplay(this.value)">
+                    <span class="range-value" id="speedValue">40 detik</span>
                     <small style="color: #666; display: block; margin-top: 5px;">
-                        Durasi untuk 1 putaran teks. Makin kecil = makin cepat.
+                        Berapa lama 1 teks ditampilkan sebelum ganti ke teks berikutnya.
                     </small>
                 </div>
 
                 <div class="settings-group">
                     <label>
-                        <strong>Interval Auto-Reload:</strong>
+                        <strong>Reload Google Slides:</strong>
                     </label>
-                    <input type="number" id="reloadInterval" min="30" max="300" value="45" step="15">
+                    <input type="number" id="reloadInterval" min="30" max="300" value="60" step="15">
                     <small style="color: #666; display: block; margin-top: 5px;">
-                        Display akan reload otomatis setiap N detik (30-300).
+                        Google Slides akan di-refresh setiap N detik (30-300 detik).
                     </small>
                 </div>
 
@@ -484,7 +484,7 @@
             <!-- Preview Card -->
             <div class="card" style="margin-top: 20px;">
                 <div class="card-header">
-                    <h2>👁️ Preview Teks</h2>
+                    <h2>👁️ Preview Urutan Teks</h2>
                 </div>
 
                 <div class="preview-box" id="previewBox">
@@ -521,8 +521,8 @@
 
         // Load settings
         function loadSettings() {
-            const speed = localStorage.getItem('scrollSpeed') || 25;
-            const reload = localStorage.getItem('reloadInterval') || 45;
+            const speed = localStorage.getItem('scrollSpeed') || 40;
+            const reload = localStorage.getItem('reloadInterval') || 60;
             
             document.getElementById('speedRange').value = speed;
             document.getElementById('speedValue').textContent = speed + ' detik';
@@ -631,7 +631,7 @@
             localStorage.setItem('scrollSpeed', speed);
             localStorage.setItem('reloadInterval', reload);
             
-            alert('✅ Pengaturan berhasil disimpan! Refresh halaman display untuk melihat perubahan.');
+            alert('✅ Pengaturan berhasil disimpan!');
         }
 
         // Update speed display
@@ -672,7 +672,8 @@
             if (texts.length === 0) {
                 previewBox.innerHTML = '<div class="empty-preview">Belum ada teks</div>';
             } else {
-                previewBox.innerHTML = '<div class="preview-title">Teks akan tampil dalam urutan:</div>' +
+                const duration = document.getElementById('speedRange').value;
+                previewBox.innerHTML = '<div class="preview-title">Urutan tampilan (masing-masing ' + duration + ' detik):</div>' +
                     texts.map((text, index) => 
                         `<div class="preview-text">${index + 1}. ${text}</div>`
                     ).join('');
