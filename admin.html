@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <title>Admin - Input Running Text</title>
+    <title>Admin Panel - Display Informasi Tjahaja Baru</title>
     <style>
         * {
             margin: 0;
@@ -14,50 +14,108 @@
 
         body {
             font-family: 'Roboto', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #ffffff;
             min-height: 100vh;
-            padding: 20px;
+            padding: 0;
         }
 
-        .container {
-            max-width: 800px;
+        /* Header dengan logo */
+        .header {
+            background: #041066;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            max-width: 1200px;
             margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
             background: white;
-            border-radius: 15px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            padding: 40px;
-        }
-
-        h1 {
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
             color: #041066;
-            text-align: center;
-            margin-bottom: 10px;
-            font-size: 32px;
+            font-size: 24px;
         }
 
-        .subtitle {
-            text-align: center;
-            color: #666;
-            margin-bottom: 30px;
-            font-size: 14px;
+        .header h1 {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
         }
 
-        .info-box {
-            background: #f0f4ff;
-            border-left: 4px solid #041066;
-            padding: 15px;
-            margin-bottom: 25px;
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .btn-preview {
+            padding: 10px 20px;
+            background: #ff8c00;
+            color: white;
+            border: none;
             border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background 0.3s;
         }
 
-        .info-box p {
-            color: #041066;
-            font-size: 14px;
-            line-height: 1.6;
+        .btn-preview:hover {
+            background: #e67e00;
         }
 
-        .form-group {
+        /* Container utama */
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+        }
+
+        /* Card styling */
+        .card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .card-header {
+            border-bottom: 3px solid #041066;
+            padding-bottom: 15px;
             margin-bottom: 20px;
+        }
+
+        .card-header h2 {
+            color: #041066;
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        /* Form styling */
+        .form-group {
+            margin-bottom: 15px;
         }
 
         .form-group label {
@@ -72,13 +130,27 @@
             display: flex;
             gap: 10px;
             margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .input-number {
+            width: 40px;
+            height: 40px;
+            background: #041066;
+            color: white;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
         }
 
         .input-wrapper input {
             flex: 1;
             padding: 12px 15px;
             border: 2px solid #e0e0e0;
-            border-radius: 8px;
+            border-radius: 5px;
             font-size: 14px;
             transition: border-color 0.3s;
             font-family: 'Roboto', sans-serif;
@@ -86,33 +158,33 @@
 
         .input-wrapper input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #041066;
         }
 
         .btn-remove {
             padding: 12px 20px;
-            background: #ff4757;
+            background: #dc3545;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
             font-weight: 500;
             transition: background 0.3s;
+            flex-shrink: 0;
         }
 
         .btn-remove:hover {
-            background: #ee2e40;
+            background: #c82333;
         }
 
         .btn-add {
             padding: 12px 25px;
-            background: #10ac84;
+            background: #ff8c00;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
             font-weight: 500;
-            margin-bottom: 20px;
             display: inline-flex;
             align-items: center;
             gap: 8px;
@@ -120,7 +192,7 @@
         }
 
         .btn-add:hover {
-            background: #0e9670;
+            background: #e67e00;
         }
 
         .btn-save {
@@ -129,7 +201,7 @@
             background: #041066;
             color: white;
             border: none;
-            border-radius: 8px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 16px;
             font-weight: 700;
@@ -141,13 +213,33 @@
             background: #030c4d;
         }
 
+        .btn-clear {
+            width: 100%;
+            padding: 12px;
+            background: white;
+            color: #dc3545;
+            border: 2px solid #dc3545;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+
+        .btn-clear:hover {
+            background: #dc3545;
+            color: white;
+        }
+
+        /* Success message */
         .success-message {
             display: none;
             padding: 15px;
-            background: #10ac84;
+            background: #28a745;
             color: white;
-            border-radius: 8px;
-            margin-top: 20px;
+            border-radius: 5px;
+            margin-bottom: 20px;
             text-align: center;
             font-weight: 500;
         }
@@ -168,67 +260,236 @@
             }
         }
 
-        .preview-section {
-            margin-top: 30px;
-            padding-top: 30px;
-            border-top: 2px solid #e0e0e0;
-        }
-
-        .preview-section h2 {
-            color: #041066;
-            margin-bottom: 15px;
-            font-size: 20px;
-        }
-
+        /* Preview section */
         .preview-box {
             background: #f8f9fa;
-            padding: 20px;
-            border-radius: 8px;
-            min-height: 100px;
-            border: 2px dashed #ccc;
+            padding: 15px;
+            border-radius: 5px;
+            border: 2px solid #e0e0e0;
+            min-height: 150px;
+            margin-top: 15px;
         }
 
-        .preview-item {
-            padding: 8px 12px;
-            background: white;
-            margin-bottom: 8px;
-            border-radius: 5px;
-            border-left: 3px solid #667eea;
+        .preview-title {
+            font-weight: 600;
+            color: #041066;
+            margin-bottom: 10px;
             font-size: 14px;
+        }
+
+        .preview-text {
+            background: white;
+            padding: 10px 15px;
+            border-left: 3px solid #ff8c00;
+            margin-bottom: 8px;
+            border-radius: 3px;
+            font-size: 14px;
+            word-wrap: break-word;
         }
 
         .empty-preview {
             color: #999;
             text-align: center;
             font-style: italic;
+            padding: 30px;
+        }
+
+        /* Info stats */
+        .info-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            border-left: 4px solid #ff8c00;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #041066;
+        }
+
+        /* Settings section */
+        .settings-group {
+            margin-bottom: 20px;
+        }
+
+        .settings-group label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .settings-group input[type="number"],
+        .settings-group input[type="range"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .settings-group input[type="range"] {
+            padding: 0;
+        }
+
+        .range-value {
+            display: inline-block;
+            background: #041066;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .info-stats {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .info-banner {
+            background: #e7f3ff;
+            border: 1px solid #b3d9ff;
+            padding: 12px 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #041066;
         }
     </style>
 </head>
 <body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">TB</div>
+                <h1>Admin Panel - Display Informasi</h1>
+            </div>
+            <div class="header-right">
+                <a href="index.html" target="_blank" class="btn-preview">👁️ Lihat Display</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="success-message" id="successMessage">
+        ✅ Data berhasil disimpan! Perubahan akan terlihat pada display.
+    </div>
+
+    <!-- Container -->
     <div class="container">
-        <h1>⚙️ Admin Panel</h1>
-        <p class="subtitle">Kelola Running Text Display Informasi</p>
+        <!-- Main Content -->
+        <div>
+            <div class="card">
+                <div class="card-header">
+                    <h2>📝 Kelola Running Text</h2>
+                </div>
 
-        <div class="info-box">
-            <p><strong>ℹ️ Informasi:</strong> Teks yang Anda input di sini akan otomatis muncul pada display informasi. Halaman display akan reload otomatis setiap 45 detik untuk update.</p>
+                <div class="info-banner">
+                    💡 <strong>Tips:</strong> Running text akan berjalan dari kanan ke kiri seperti berita TV. Pisahkan setiap info penting di kolom berbeda.
+                </div>
+
+                <div class="form-group">
+                    <div id="textInputs"></div>
+                    <button class="btn-add" onclick="addTextInput()">➕ Tambah Teks Baru</button>
+                </div>
+
+                <button class="btn-save" onclick="saveTexts()">💾 SIMPAN PERUBAHAN</button>
+                <button class="btn-clear" onclick="clearAllTexts()">🗑️ Hapus Semua Teks</button>
+            </div>
+
+            <!-- Settings Card -->
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <h2>⚙️ Pengaturan Display</h2>
+                </div>
+
+                <div class="settings-group">
+                    <label>
+                        <strong>Kecepatan Running Text:</strong>
+                    </label>
+                    <input type="range" id="speedRange" min="10" max="40" value="25" oninput="updateSpeedDisplay(this.value)">
+                    <span class="range-value" id="speedValue">25 detik</span>
+                    <small style="color: #666; display: block; margin-top: 5px;">
+                        Durasi untuk 1 putaran teks. Makin kecil = makin cepat.
+                    </small>
+                </div>
+
+                <div class="settings-group">
+                    <label>
+                        <strong>Interval Auto-Reload:</strong>
+                    </label>
+                    <input type="number" id="reloadInterval" min="30" max="300" value="45" step="15">
+                    <small style="color: #666; display: block; margin-top: 5px;">
+                        Display akan reload otomatis setiap N detik (30-300).
+                    </small>
+                </div>
+
+                <button class="btn-save" onclick="saveSettings()">💾 Simpan Pengaturan</button>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label>📝 Running Text (Minimal 1 teks):</label>
-            <div id="textInputs"></div>
-            <button class="btn-add" onclick="addTextInput()">➕ Tambah Teks</button>
-        </div>
+        <!-- Sidebar -->
+        <div>
+            <!-- Stats Card -->
+            <div class="card">
+                <div class="card-header">
+                    <h2>📊 Statistik</h2>
+                </div>
 
-        <button class="btn-save" onclick="saveTexts()">💾 SIMPAN & TERAPKAN</button>
+                <div class="info-stats">
+                    <div class="stat-box">
+                        <div class="stat-label">Total Teks</div>
+                        <div class="stat-value" id="totalTexts">0</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">Karakter</div>
+                        <div class="stat-value" id="totalChars">0</div>
+                    </div>
+                </div>
 
-        <div class="success-message" id="successMessage">
-            ✅ Running text berhasil disimpan! Perubahan akan terlihat pada display.
-        </div>
+                <div style="background: #f8f9fa; padding: 10px; border-radius: 5px; font-size: 13px; color: #666;">
+                    <strong>Terakhir Disimpan:</strong><br>
+                    <span id="lastSaved">Belum ada data</span>
+                </div>
+            </div>
 
-        <div class="preview-section">
-            <h2>👁️ Preview Running Text</h2>
-            <div class="preview-box" id="previewBox">
-                <div class="empty-preview">Belum ada teks. Silakan tambahkan running text di atas.</div>
+            <!-- Preview Card -->
+            <div class="card" style="margin-top: 20px;">
+                <div class="card-header">
+                    <h2>👁️ Preview Teks</h2>
+                </div>
+
+                <div class="preview-box" id="previewBox">
+                    <div class="empty-preview">Belum ada teks</div>
+                </div>
             </div>
         </div>
     </div>
@@ -239,7 +500,7 @@
         // Load existing texts from localStorage
         function loadTexts() {
             const stored = localStorage.getItem('runningTexts');
-            let texts = ["DISPLAY INFORMASI TJAHAJA BARU : "];
+            let texts = ["DISPLAY INFORMASI TJAHAJA BARU"];
             
             if (stored) {
                 try {
@@ -249,12 +510,23 @@
                 }
             }
 
-            // Create input fields for each stored text
             texts.forEach(text => {
                 addTextInput(text);
             });
 
+            updateStats();
             updatePreview();
+            loadLastSaved();
+        }
+
+        // Load settings
+        function loadSettings() {
+            const speed = localStorage.getItem('scrollSpeed') || 25;
+            const reload = localStorage.getItem('reloadInterval') || 45;
+            
+            document.getElementById('speedRange').value = speed;
+            document.getElementById('speedValue').textContent = speed + ' detik';
+            document.getElementById('reloadInterval').value = reload;
         }
 
         // Add text input field
@@ -266,14 +538,17 @@
             wrapper.id = `text-${textCount}`;
             
             wrapper.innerHTML = `
+                <div class="input-number">${container.children.length + 1}</div>
                 <input type="text" 
-                       placeholder="Contoh: Selamat datang di Tjahaja Baru..." 
+                       placeholder="Masukkan teks informasi..." 
                        value="${value}"
-                       oninput="updatePreview()">
-                <button class="btn-remove" onclick="removeTextInput(${textCount})">🗑️ Hapus</button>
+                       oninput="updateStats(); updatePreview()"
+                       maxlength="200">
+                <button class="btn-remove" onclick="removeTextInput(${textCount})">🗑️</button>
             `;
             
             container.appendChild(wrapper);
+            updateStats();
         }
 
         // Remove text input field
@@ -287,8 +562,21 @@
             const element = document.getElementById(`text-${id}`);
             if (element) {
                 element.remove();
+                updateNumbering();
+                updateStats();
                 updatePreview();
             }
+        }
+
+        // Update numbering after deletion
+        function updateNumbering() {
+            const wrappers = document.querySelectorAll('.input-wrapper');
+            wrappers.forEach((wrapper, index) => {
+                const numberDiv = wrapper.querySelector('.input-number');
+                if (numberDiv) {
+                    numberDiv.textContent = index + 1;
+                }
+            });
         }
 
         // Save texts to localStorage
@@ -309,8 +597,8 @@
             }
 
             localStorage.setItem('runningTexts', JSON.stringify(texts));
+            localStorage.setItem('lastSaved', new Date().toLocaleString('id-ID'));
             
-            // Show success message
             const successMsg = document.getElementById('successMessage');
             successMsg.classList.add('show');
             
@@ -318,7 +606,54 @@
                 successMsg.classList.remove('show');
             }, 3000);
 
+            loadLastSaved();
+            updateStats();
             updatePreview();
+        }
+
+        // Clear all texts
+        function clearAllTexts() {
+            if (confirm('Yakin ingin menghapus semua teks? Tindakan ini tidak dapat dibatalkan.')) {
+                localStorage.removeItem('runningTexts');
+                document.getElementById('textInputs').innerHTML = '';
+                textCount = 0;
+                addTextInput('DISPLAY INFORMASI TJAHAJA BARU');
+                updateStats();
+                updatePreview();
+            }
+        }
+
+        // Save settings
+        function saveSettings() {
+            const speed = document.getElementById('speedRange').value;
+            const reload = document.getElementById('reloadInterval').value;
+            
+            localStorage.setItem('scrollSpeed', speed);
+            localStorage.setItem('reloadInterval', reload);
+            
+            alert('✅ Pengaturan berhasil disimpan! Refresh halaman display untuk melihat perubahan.');
+        }
+
+        // Update speed display
+        function updateSpeedDisplay(value) {
+            document.getElementById('speedValue').textContent = value + ' detik';
+        }
+
+        // Update statistics
+        function updateStats() {
+            const inputs = document.querySelectorAll('.input-wrapper input');
+            let totalChars = 0;
+            let totalTexts = 0;
+            
+            inputs.forEach(input => {
+                if (input.value.trim() !== '') {
+                    totalTexts++;
+                    totalChars += input.value.length;
+                }
+            });
+
+            document.getElementById('totalTexts').textContent = totalTexts;
+            document.getElementById('totalChars').textContent = totalChars;
         }
 
         // Update preview
@@ -335,17 +670,27 @@
             });
 
             if (texts.length === 0) {
-                previewBox.innerHTML = '<div class="empty-preview">Belum ada teks. Silakan tambahkan running text di atas.</div>';
+                previewBox.innerHTML = '<div class="empty-preview">Belum ada teks</div>';
             } else {
-                previewBox.innerHTML = texts.map((text, index) => 
-                    `<div class="preview-item">${index + 1}. ${text}</div>`
-                ).join('');
+                previewBox.innerHTML = '<div class="preview-title">Teks akan tampil dalam urutan:</div>' +
+                    texts.map((text, index) => 
+                        `<div class="preview-text">${index + 1}. ${text}</div>`
+                    ).join('');
             }
         }
 
-        // Initialize on page load
+        // Load last saved time
+        function loadLastSaved() {
+            const lastSaved = localStorage.getItem('lastSaved');
+            if (lastSaved) {
+                document.getElementById('lastSaved').textContent = lastSaved;
+            }
+        }
+
+        // Initialize
         window.onload = function() {
             loadTexts();
+            loadSettings();
         };
     </script>
 </body>
