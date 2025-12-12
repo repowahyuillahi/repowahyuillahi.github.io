@@ -106,7 +106,7 @@
             height: 100%;
         }
 
-        /* Running text yang berjalan - duration akan diset via JavaScript */
+        /* Running text yang berjalan */
         .marquee {
             display: inline-block;
             white-space: nowrap;
@@ -114,12 +114,16 @@
             font-size: 18px;
             font-weight: 500;
             line-height: 40px;
+            animation: scroll-left 30s linear infinite;
         }
 
-        /* Separator antar teks */
-        .separator {
-            margin: 0 30px;
-            color: #041066;
+        @keyframes scroll-left {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
         }
 
         .animatedText {
@@ -164,6 +168,9 @@
         const marqueeText = document.getElementById("marqueeText");
         const timeDisplay = document.getElementById("timeDisplay");
 
+        let currentTextIndex = 0;
+        let runningTexts = [];
+
         // Fungsi untuk mendapatkan running text dari localStorage
         function getRunningTexts() {
             const stored = localStorage.getItem('runningTexts');
@@ -178,43 +185,57 @@
             return ["DISPLAY INFORMASI TJAHAJA BARU"];
         }
 
-        // Fungsi untuk mendapatkan kecepatan scroll dari localStorage
-        function getScrollSpeed() {
-            const speed = localStorage.getItem('scrollSpeed');
-            return speed ? parseInt(speed) : 25; // Default 25 detik
+        // Fungsi untuk mendapatkan durasi per teks dari localStorage
+        function getTextDuration() {
+            const duration = localStorage.getItem('scrollSpeed');
+            return duration ? parseInt(duration) * 1000 : 40000; // Default 40 detik, convert ke milliseconds
         }
 
-        // Fungsi untuk mendapatkan interval reload dari localStorage
-        function getReloadInterval() {
+        // Fungsi untuk mendapatkan interval reload slide dari localStorage
+        function getSlideReloadInterval() {
             const interval = localStorage.getItem('reloadInterval');
-            return interval ? parseInt(interval) * 1000 : 45000; // Default 45 detik, convert ke milliseconds
+            return interval ? parseInt(interval) * 1000 : 60000; // Default 60 detik
         }
 
-        // Update running text dengan animasi berjalan
-        function updateMarqueeText() {
-            const messages = getRunningTexts();
-            const scrollSpeed = getScrollSpeed();
-            const fullText = messages.join(' || ') + ' || '; // Gabungkan semua teks dengan separator
+        // Fungsi untuk menampilkan 1 teks running
+        function showNextText() {
+            runningTexts = getRunningTexts(); // Refresh data dari localStorage
             
-            marqueeText.innerHTML = fullText + fullText + fullText; // Duplikasi untuk seamless loop
-            
-            // Set animation duration dari localStorage
-            marqueeText.style.animation = `scroll-left ${scrollSpeed}s linear infinite`;
-        }
-
-        // Tambahkan keyframes untuk animasi scroll
-        const styleSheet = document.createElement("style");
-        styleSheet.textContent = `
-            @keyframes scroll-left {
-                0% {
-                    transform: translateX(0);
-                }
-                100% {
-                    transform: translateX(-100%);
-                }
+            if (runningTexts.length === 0) {
+                runningTexts = ["DISPLAY INFORMASI TJAHAJA BARU"];
             }
-        `;
-        document.head.appendChild(styleSheet);
+
+            // Reset index jika sudah habis
+            if (currentTextIndex >= runningTexts.length) {
+                currentTextIndex = 0;
+            }
+
+            const currentText = runningTexts[currentTextIndex];
+            
+            // Duplikasi teks untuk seamless loop
+            marqueeText.textContent = currentText + ' || ' + currentText + ' || ' + currentText + ' || ';
+            
+            // Reset animasi
+            marqueeText.style.animation = 'none';
+            setTimeout(() => {
+                marqueeText.style.animation = 'scroll-left 30s linear infinite';
+            }, 10);
+
+            currentTextIndex++;
+
+            // Ganti ke teks berikutnya setelah durasi selesai
+            const duration = getTextDuration();
+            setTimeout(showNextText, duration);
+        }
+
+        // Fungsi untuk reload HANYA iframe (Google Slides)
+        function reloadSlides() {
+            const currentSrc = iframe.src;
+            iframe.src = '';
+            setTimeout(() => {
+                iframe.src = currentSrc;
+            }, 100);
+        }
 
         setTimeout(() => {
             loadingScreen.style.display = "none";
@@ -242,18 +263,16 @@
         setInterval(updateTime, 1000);
         updateTime();
 
-        // Load running text dengan kecepatan dari localStorage
-        updateMarqueeText();
+        // Mulai running text pertama
+        showNextText();
 
-        // Auto reload dengan interval dari localStorage
-        const reloadInterval = getReloadInterval();
-        setInterval(() => {
-            location.reload();
-        }, reloadInterval);
+        // Reload HANYA Google Slides dengan interval dari localStorage
+        const slideReloadInterval = getSlideReloadInterval();
+        setInterval(reloadSlides, slideReloadInterval);
 
-        // Debug info (opsional, bisa dihapus)
-        console.log('Scroll Speed:', getScrollSpeed() + ' detik');
-        console.log('Reload Interval:', getReloadInterval() / 1000 + ' detik');
+        // Debug info
+        console.log('Durasi per teks:', getTextDuration() / 1000 + ' detik');
+        console.log('Reload Slide Interval:', getSlideReloadInterval() / 1000 + ' detik');
 
     </script>
 </body>
