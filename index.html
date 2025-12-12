@@ -68,53 +68,69 @@
 
         /* Gaya footer berjalan */
         #footer {
-            position: absolute;
+            position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.8);
+            background-color: rgba(255, 255, 255, 0.9);
             color: #041066;
             display: flex;
             align-items: center;
             overflow: hidden;
             border-top: 2px solid white;
-            padding: 5px 10px;
+            padding: 5px 0;
             font-family: 'Roboto', sans-serif;
-            height: 30px;
+            height: 40px;
+            z-index: 999;
         }
 
         /* Gaya untuk teks jam */
         #timeDisplay {
-            margin-left: 10px;
+            padding: 0 15px;
             white-space: nowrap;
             font-weight: bold;
+            font-size: 16px;
+            background-color: #041066;
+            color: white;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            min-width: 300px;
         }
 
+        /* Container untuk running text */
+        .marquee-container {
+            flex: 1;
+            overflow: hidden;
+            position: relative;
+            height: 100%;
+        }
+
+        /* Running text yang berjalan */
         .marquee {
             display: inline-block;
             white-space: nowrap;
+            animation: scroll-left 25s linear infinite;
+            padding-left: 100%;
+            font-size: 18px;
+            font-weight: 500;
+            line-height: 40px;
         }
 
-        @keyframes slideInFromBottom {
-            from {
-                transform: translateY(100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-
-        @keyframes slideOutToSide {
-            from {
+        /* Animasi berjalan dari kanan ke kiri */
+        @keyframes scroll-left {
+            0% {
                 transform: translateX(0);
-                opacity: 1;
             }
-            to {
-                transform: translateX(100%);
-                opacity: 0;
+            100% {
+                transform: translateX(-100%);
             }
+        }
+
+        /* Separator antar teks */
+        .separator {
+            margin: 0 30px;
+            color: #041066;
         }
 
         .animatedText {
@@ -144,8 +160,9 @@
 
     <div id="footer">
         <div id="timeDisplay">00:00:00</div>
-        &nbsp;&nbsp;
-        <div id="infoText" class="marquee"></div>
+        <div class="marquee-container">
+            <div id="marqueeText" class="marquee"></div>
+        </div>
     </div>
 
     <div id="animatedTextContainer">
@@ -155,7 +172,7 @@
     <script>
         const iframe = document.getElementById("slidesFrame");
         const loadingScreen = document.getElementById("loadingScreen");
-        const infoText = document.getElementById("infoText");
+        const marqueeText = document.getElementById("marqueeText");
         const timeDisplay = document.getElementById("timeDisplay");
 
         // Fungsi untuk mendapatkan running text dari localStorage
@@ -166,37 +183,24 @@
                     const parsed = JSON.parse(stored);
                     return parsed.filter(text => text.trim() !== '');
                 } catch (e) {
-                    return ["DISPLAY INFORMASI TJAHAJA BARU : "];
+                    return ["DISPLAY INFORMASI TJAHAJA BARU"];
                 }
             }
-            return ["DISPLAY INFORMASI TJAHAJA BARU : "];
+            return ["DISPLAY INFORMASI TJAHAJA BARU"];
         }
 
-        function updateFooterText() {
+        // Update running text dengan animasi berjalan
+        function updateMarqueeText() {
             const messages = getRunningTexts();
+            const fullText = messages.join(' ★★★ ') + ' ★★★ '; // Gabungkan semua teks dengan separator
             
-            messages.forEach((message, index) => {
-                setTimeout(() => {
-                    const span = document.createElement('span');
-                    span.textContent = message;
-                    span.style.animation = "slideInFromBottom 1s forwards";
-                    infoText.appendChild(span);
-                    infoText.appendChild(document.createTextNode("   "));
-                }, index * 2000);
-            });
-
-            setTimeout(() => {
-                infoText.innerHTML = "";
-                updateFooterText();
-            }, messages.length * 2000 + 15000);
+            marqueeText.innerHTML = fullText + fullText + fullText; // Duplikasi untuk seamless loop
         }
 
         setTimeout(() => {
             loadingScreen.style.display = "none";
             iframe.style.opacity = 1;
         }, 3000);
-
-        updateFooterText();
 
         // Menampilkan waktu terkini dengan hari, bulan, dan tahun
         function updateTime() {
@@ -212,13 +216,17 @@
             const minutes = currentDate.getMinutes().toString().padStart(2, '0');
             const seconds = currentDate.getSeconds().toString().padStart(2, '0');
 
-            timeDisplay.textContent = `${dayOfWeek}, ${dayOfMonth} ${month} ${year} ${hours}:${minutes}:${seconds} `;
+            timeDisplay.textContent = `${dayOfWeek}, ${dayOfMonth} ${month} ${year} | ${hours}:${minutes}:${seconds}`;
         }
 
         // Update waktu setiap detik
         setInterval(updateTime, 1000);
+        updateTime();
 
-        // Auto reload setiap 45 detik untuk update Google Slides
+        // Load running text
+        updateMarqueeText();
+
+        // Auto reload setiap 45 detik untuk update Google Slides dan running text
         setInterval(() => {
             location.reload();
         }, 45000); // 45 detik
