@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <title>Admin - Input Running Text</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            padding: 40px;
+        }
+
+        h1 {
+            color: #041066;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+
+        .info-box {
+            background: #f0f4ff;
+            border-left: 4px solid #041066;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 5px;
+        }
+
+        .info-box p {
+            color: #041066;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .input-wrapper input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn-remove {
+            padding: 12px 20px;
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .btn-remove:hover {
+            background: #ee2e40;
+        }
+
+        .btn-add {
+            padding: 12px 25px;
+            background: #10ac84;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: background 0.3s;
+        }
+
+        .btn-add:hover {
+            background: #0e9670;
+        }
+
+        .btn-save {
+            width: 100%;
+            padding: 15px;
+            background: #041066;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 700;
+            margin-top: 10px;
+            transition: background 0.3s;
+        }
+
+        .btn-save:hover {
+            background: #030c4d;
+        }
+
+        .success-message {
+            display: none;
+            padding: 15px;
+            background: #10ac84;
+            color: white;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .preview-section {
+            margin-top: 30px;
+            padding-top: 30px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .preview-section h2 {
+            color: #041066;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .preview-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            min-height: 100px;
+            border: 2px dashed #ccc;
+        }
+
+        .preview-item {
+            padding: 8px 12px;
+            background: white;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            border-left: 3px solid #667eea;
+            font-size: 14px;
+        }
+
+        .empty-preview {
+            color: #999;
+            text-align: center;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚙️ Admin Panel</h1>
+        <p class="subtitle">Kelola Running Text Display Informasi</p>
+
+        <div class="info-box">
+            <p><strong>ℹ️ Informasi:</strong> Teks yang Anda input di sini akan otomatis muncul pada display informasi. Halaman display akan reload otomatis setiap 45 detik untuk update.</p>
+        </div>
+
+        <div class="form-group">
+            <label>📝 Running Text (Minimal 1 teks):</label>
+            <div id="textInputs"></div>
+            <button class="btn-add" onclick="addTextInput()">➕ Tambah Teks</button>
+        </div>
+
+        <button class="btn-save" onclick="saveTexts()">💾 SIMPAN & TERAPKAN</button>
+
+        <div class="success-message" id="successMessage">
+            ✅ Running text berhasil disimpan! Perubahan akan terlihat pada display.
+        </div>
+
+        <div class="preview-section">
+            <h2>👁️ Preview Running Text</h2>
+            <div class="preview-box" id="previewBox">
+                <div class="empty-preview">Belum ada teks. Silakan tambahkan running text di atas.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let textCount = 0;
+
+        // Load existing texts from localStorage
+        function loadTexts() {
+            const stored = localStorage.getItem('runningTexts');
+            let texts = ["DISPLAY INFORMASI TJAHAJA BARU : "];
+            
+            if (stored) {
+                try {
+                    texts = JSON.parse(stored);
+                } catch (e) {
+                    console.error('Error parsing stored texts:', e);
+                }
+            }
+
+            // Create input fields for each stored text
+            texts.forEach(text => {
+                addTextInput(text);
+            });
+
+            updatePreview();
+        }
+
+        // Add text input field
+        function addTextInput(value = '') {
+            textCount++;
+            const container = document.getElementById('textInputs');
+            const wrapper = document.createElement('div');
+            wrapper.className = 'input-wrapper';
+            wrapper.id = `text-${textCount}`;
+            
+            wrapper.innerHTML = `
+                <input type="text" 
+                       placeholder="Contoh: Selamat datang di Tjahaja Baru..." 
+                       value="${value}"
+                       oninput="updatePreview()">
+                <button class="btn-remove" onclick="removeTextInput(${textCount})">🗑️ Hapus</button>
+            `;
+            
+            container.appendChild(wrapper);
+        }
+
+        // Remove text input field
+        function removeTextInput(id) {
+            const inputs = document.querySelectorAll('.input-wrapper');
+            if (inputs.length <= 1) {
+                alert('Minimal harus ada 1 running text!');
+                return;
+            }
+            
+            const element = document.getElementById(`text-${id}`);
+            if (element) {
+                element.remove();
+                updatePreview();
+            }
+        }
+
+        // Save texts to localStorage
+        function saveTexts() {
+            const inputs = document.querySelectorAll('.input-wrapper input');
+            const texts = [];
+            
+            inputs.forEach(input => {
+                const value = input.value.trim();
+                if (value !== '') {
+                    texts.push(value);
+                }
+            });
+
+            if (texts.length === 0) {
+                alert('Harap isi minimal 1 running text!');
+                return;
+            }
+
+            localStorage.setItem('runningTexts', JSON.stringify(texts));
+            
+            // Show success message
+            const successMsg = document.getElementById('successMessage');
+            successMsg.classList.add('show');
+            
+            setTimeout(() => {
+                successMsg.classList.remove('show');
+            }, 3000);
+
+            updatePreview();
+        }
+
+        // Update preview
+        function updatePreview() {
+            const inputs = document.querySelectorAll('.input-wrapper input');
+            const previewBox = document.getElementById('previewBox');
+            const texts = [];
+            
+            inputs.forEach(input => {
+                const value = input.value.trim();
+                if (value !== '') {
+                    texts.push(value);
+                }
+            });
+
+            if (texts.length === 0) {
+                previewBox.innerHTML = '<div class="empty-preview">Belum ada teks. Silakan tambahkan running text di atas.</div>';
+            } else {
+                previewBox.innerHTML = texts.map((text, index) => 
+                    `<div class="preview-item">${index + 1}. ${text}</div>`
+                ).join('');
+            }
+        }
+
+        // Initialize on page load
+        window.onload = function() {
+            loadTexts();
+        };
+    </script>
+</body>
+</html>
