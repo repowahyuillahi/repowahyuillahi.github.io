@@ -106,25 +106,14 @@
             height: 100%;
         }
 
-        /* Running text yang berjalan */
+        /* Running text yang berjalan - duration akan diset via JavaScript */
         .marquee {
             display: inline-block;
             white-space: nowrap;
-            animation: scroll-left 25s linear infinite;
             padding-left: 100%;
             font-size: 18px;
             font-weight: 500;
             line-height: 40px;
-        }
-
-        /* Animasi berjalan dari kanan ke kiri */
-        @keyframes scroll-left {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-100%);
-            }
         }
 
         /* Separator antar teks */
@@ -189,13 +178,43 @@
             return ["DISPLAY INFORMASI TJAHAJA BARU"];
         }
 
+        // Fungsi untuk mendapatkan kecepatan scroll dari localStorage
+        function getScrollSpeed() {
+            const speed = localStorage.getItem('scrollSpeed');
+            return speed ? parseInt(speed) : 25; // Default 25 detik
+        }
+
+        // Fungsi untuk mendapatkan interval reload dari localStorage
+        function getReloadInterval() {
+            const interval = localStorage.getItem('reloadInterval');
+            return interval ? parseInt(interval) * 1000 : 45000; // Default 45 detik, convert ke milliseconds
+        }
+
         // Update running text dengan animasi berjalan
         function updateMarqueeText() {
             const messages = getRunningTexts();
-            const fullText = messages.join(' || ') + ' || '; // Gabungkan semua teks dengan separator
+            const scrollSpeed = getScrollSpeed();
+            const fullText = messages.join(' ★★★ ') + ' ★★★ '; // Gabungkan semua teks dengan separator
             
             marqueeText.innerHTML = fullText + fullText + fullText; // Duplikasi untuk seamless loop
+            
+            // Set animation duration dari localStorage
+            marqueeText.style.animation = `scroll-left ${scrollSpeed}s linear infinite`;
         }
+
+        // Tambahkan keyframes untuk animasi scroll
+        const styleSheet = document.createElement("style");
+        styleSheet.textContent = `
+            @keyframes scroll-left {
+                0% {
+                    transform: translateX(0);
+                }
+                100% {
+                    transform: translateX(-100%);
+                }
+            }
+        `;
+        document.head.appendChild(styleSheet);
 
         setTimeout(() => {
             loadingScreen.style.display = "none";
@@ -223,13 +242,18 @@
         setInterval(updateTime, 1000);
         updateTime();
 
-        // Load running text
+        // Load running text dengan kecepatan dari localStorage
         updateMarqueeText();
 
-        // Auto reload setiap 45 detik untuk update Google Slides dan running text
+        // Auto reload dengan interval dari localStorage
+        const reloadInterval = getReloadInterval();
         setInterval(() => {
             location.reload();
-        }, 45000); // 45 detik
+        }, reloadInterval);
+
+        // Debug info (opsional, bisa dihapus)
+        console.log('Scroll Speed:', getScrollSpeed() + ' detik');
+        console.log('Reload Interval:', getReloadInterval() / 1000 + ' detik');
 
     </script>
 </body>
