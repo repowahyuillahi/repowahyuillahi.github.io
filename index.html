@@ -122,6 +122,7 @@
             color: #041066;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
             opacity: 0;
+            will-change: transform;
         }
 
         .breaking {
@@ -155,12 +156,7 @@
         .category-icon {
             font-size: 28px;
             margin: 0 12px;
-            animation: bounce 2s infinite;
-        }
-
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+            display: inline-block;
         }
 
         .progress-container {
@@ -180,22 +176,40 @@
             box-shadow: 0 0 10px rgba(255,140,0,0.5);
         }
 
+        /* ANIMASI SMOOTH LINEAR - SEPERTI TV - TIDAK NGEBUT */
+        @keyframes scrollSmooth {
+            0% {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            5% {
+                opacity: 1;
+            }
+            95% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+        }
+
+        /* ANIMASI DENGAN PAUSE DI TENGAH - SANTAI */
         @keyframes scrollWithPause {
             0% {
                 transform: translateX(100%);
                 opacity: 0;
             }
-            10% {
+            8% {
                 opacity: 1;
             }
-            45% {
-                transform: translateX(50%);
+            48% {
+                transform: translateX(10%);
             }
-            55% {
-                transform: translateX(50%);
+            52% {
+                transform: translateX(10%);
             }
-            90% {
-                transform: translateX(-100%);
+            92% {
                 opacity: 1;
             }
             100% {
@@ -241,7 +255,7 @@
     </div>
 
     <script>
-        // !!! GANTI INI DENGAN URL APPS SCRIPT ANDA !!!
+        // URL APPS SCRIPT
         const API_URL = 'https://script.google.com/macros/s/AKfycbynDFVmfgnZv_5D65NS4qniSS24ygJ9L8xEFwE3S0EOqx1wJg0bgD8R_xUNefxIWQTTuw/exec';
         
         const iframe = document.getElementById("slidesFrame");
@@ -253,7 +267,7 @@
         let currentTextIndex = 0;
         let runningTexts = [];
         let isAnimating = false;
-        let scrollSpeed = 15;
+        let scrollSpeed = 25; // Default 25 detik (santai)
         let reloadInterval = 60;
         let progressInterval;
 
@@ -280,12 +294,16 @@
         }
 
         function highlightText(text) {
-            const promoWords = ['PROMO', 'DISKON', 'GRATIS', 'FREE', 'SALE', 'MURAH'];
+            const promoWords = ['PROMO', 'DISKON', 'GRATIS', 'FREE', 'SALE', 'MURAH', 'SPESIAL'];
             promoWords.forEach(word => {
                 const regex = new RegExp(`\\b${word}\\b`, 'gi');
-                text = text.replace(regex, `<span class="highlight-promo">${word.toUpperCase()}</span>`);
+                text = text.replace(regex, match => `<span class="highlight-promo">${match.toUpperCase()}</span>`);
             });
-            text = text.replace(/(\d+%?)/g, '<span class="highlight-number">$1</span>');
+            
+            // Highlight angka dan persentase
+            text = text.replace(/(\d+%|\d+\.\d+%)/g, '<span class="highlight-number">$1</span>');
+            text = text.replace(/(\d{1,3}(?:\.\d{3})*(?:,\d+)?)/g, '<span class="highlight-number">$1</span>');
+            
             return text;
         }
 
@@ -297,24 +315,30 @@
                 if (result.success && result.activeData && result.activeData.length > 0) {
                     runningTexts = result.activeData;
                     
+                    // AMBIL SETTINGS DARI GOOGLE SHEETS - INI YANG PENTING!
                     if (result.settings) {
-                        scrollSpeed = parseInt(result.settings.scrollSpeed) || 15;
+                        scrollSpeed = parseInt(result.settings.scrollSpeed) || 25;
                         reloadInterval = parseInt(result.settings.reloadInterval) || 60;
+                        
+                        console.log('⚙️ Settings loaded from Google Sheets:');
+                        console.log('   - Speed: ' + scrollSpeed + ' detik');
+                        console.log('   - Reload: ' + reloadInterval + ' detik');
                     }
                     
-                    console.log('✅ Data loaded:', runningTexts.length, 'aktif');
+                    console.log('✅ Data loaded:', runningTexts.length, 'informasi aktif');
                 } else {
                     runningTexts = [{
-                        text: 'DISPLAY INFORMASI TJAHAJA BARU :',
+                        text: 'DISPLAY INFORMASI TJAHAJA BARU - Selamat Datang',
                         daysRemaining: 999,
                         category: 'info',
                         priority: 'normal'
                     }];
+                    console.log('ℹ️ Menggunakan data default');
                 }
             } catch (error) {
-                console.error('❌ Error:', error);
+                console.error('❌ Error loading data:', error);
                 runningTexts = [{
-                    text: 'DISPLAY INFORMASI TJAHAJA BARU :',
+                    text: 'DISPLAY INFORMASI TJAHAJA BARU - Selamat Datang',
                     daysRemaining: 999,
                     category: 'info',
                     priority: 'normal'
@@ -381,22 +405,27 @@
                 marqueeText.classList.remove('breaking');
             }
             
+            // GUNAKAN KECEPATAN DARI SETTINGS
             const duration = scrollSpeed;
             
+            // Reset animasi
             marqueeText.style.animation = 'none';
-            marqueeText.offsetHeight;
-            marqueeText.style.animation = `scrollWithPause ${duration}s ease-in-out`;
+            marqueeText.offsetHeight; // Force reflow
+            
+            // Pakai animasi SMOOTH LINEAR - TIDAK NGEBUT!
+            marqueeText.style.animation = `scrollSmooth ${duration}s linear forwards`;
             
             updateProgressBar(duration);
             
             isAnimating = true;
             currentTextIndex++;
 
-            console.log(`📺 [${category}] "${currentItem.text.substring(0, 40)}..." (${duration}s)`);
+            console.log(`📺 [${category}] "${currentItem.text.substring(0, 50)}..." | Speed: ${duration}s (linear)`);
 
             setTimeout(() => {
                 isAnimating = false;
-                setTimeout(showNextText, 1500);
+                // Delay 1 detik sebelum teks berikutnya
+                setTimeout(showNextText, 1000);
             }, duration * 1000);
         }
 
@@ -425,27 +454,34 @@
             timeDisplay.textContent = `${dayOfWeek}, ${dayOfMonth} ${month} ${year} | ${hours}:${minutes}:${seconds}`;
         }
 
+        // Hide loading screen after 3 seconds
         setTimeout(() => {
             loadingScreen.style.display = "none";
             iframe.style.opacity = 1;
         }, 3000);
 
+        // Update time every second
         setInterval(updateTime, 1000);
         updateTime();
 
+        // Initial fetch and start animation
         fetchRunningTexts().then(() => {
             showNextText();
         });
 
+        // Refresh data every 3 minutes
         setInterval(() => {
             fetchRunningTexts().then(() => {
-                console.log('♻️ Data refreshed');
+                console.log('♻️ Data refreshed from Google Sheets');
             });
         }, 180000);
 
+        // Reload slides based on settings
         setInterval(reloadSlides, reloadInterval * 1000);
 
         console.log('🚀 Display Tjahaja Baru - PREMIUM VERSION');
+        console.log('🎯 Running Text Mode: SMOOTH LINEAR (seperti TV)');
+        console.log('📡 API: ' + API_URL);
     </script>
 </body>
 </html>
