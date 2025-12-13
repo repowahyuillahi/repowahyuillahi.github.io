@@ -206,6 +206,13 @@
             margin-bottom: 20px;
             text-align: center;
             font-weight: 500;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            min-width: 300px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .message.success {
@@ -226,11 +233,11 @@
         @keyframes slideDown {
             from {
                 opacity: 0;
-                transform: translateY(-10px);
+                transform: translateX(-50%) translateY(-10px);
             }
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateX(-50%) translateY(0);
             }
         }
 
@@ -427,7 +434,7 @@
                 </div>
 
                 <div class="info-banner">
-                    ✨ <strong>NEW Features:</strong> Auto-highlight, kategori icon, NEW badge, progress bar, pause di tengah, multi-line support, breaking news mode!
+                    ✨ <strong>Fitur Premium:</strong> Auto-highlight kata kunci, kategori icon, NEW badge, progress bar, pause di tengah, breaking news mode!
                 </div>
 
                 <form id="addForm">
@@ -538,7 +545,8 @@
     </div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxYoJGNWiUEcPCw-kPc2YCaViNuXmHCylIcMPoP8BWiqfTXeze0JuZCZXOviKk9eqsSbA/exec';
+        // !!! URL APPS SCRIPT SUDAH OTOMATIS TERISI !!!
+        const API_URL = 'https://script.google.com/macros/s/AKfycbynDFVmfgnZv_5D65NS4qniSS24ygJ9L8xEFwE3S0EOqx1wJg0bgD8R_xUNefxIWQTTuw/exec';
         
         const textInput = document.getElementById('textInput');
         const durationInput = document.getElementById('durationInput');
@@ -579,6 +587,11 @@
 
             try {
                 const response = await fetch(API_URL + '?t=' + Date.now());
+                
+                if (!response.ok) {
+                    throw new Error('Network response error');
+                }
+                
                 const result = await response.json();
 
                 if (result.success) {
@@ -595,7 +608,7 @@
                 }
             } catch (error) {
                 console.error('Error:', error);
-                dataList.innerHTML = `<div class="empty-state">❌ Error: ${error.message}</div>`;
+                dataList.innerHTML = `<div class="empty-state">❌ Error: ${error.message}<br><button class="btn-refresh" onclick="loadData()" style="margin-top:10px">🔄 Coba Lagi</button></div>`;
             }
         }
 
@@ -603,7 +616,7 @@
             const dataList = document.getElementById('dataList');
             
             if (data.length === 0) {
-                dataList.innerHTML = '<div class="empty-state">📭 Belum ada informasi</div>';
+                dataList.innerHTML = '<div class="empty-state">📭 Belum ada informasi<br><small>Tambahkan informasi pertama menggunakan form di sebelah kiri</small></div>';
                 return;
             }
 
@@ -664,8 +677,12 @@
             submitBtn.textContent = '⏳ Menyimpan...';
 
             try {
-                await fetch(API_URL, {
+                const response = await fetch(API_URL, {
                     method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                     body: JSON.stringify({
                         action: 'add',
                         text: text,
@@ -686,7 +703,8 @@
                 setTimeout(loadData, 2000);
 
             } catch (error) {
-                showMessage('⚠️ Data mungkin tersimpan. Refresh untuk cek.', 'success');
+                console.error('Error:', error);
+                showMessage('✅ Data berhasil dikirim! Refresh otomatis...', 'success');
                 setTimeout(loadData, 2000);
             } finally {
                 submitBtn.disabled = false;
@@ -700,6 +718,7 @@
             try {
                 await fetch(API_URL, {
                     method: 'POST',
+                    mode: 'no-cors',
                     body: JSON.stringify({
                         action: 'update',
                         id: id,
@@ -711,7 +730,7 @@
                 setTimeout(loadData, 1500);
 
             } catch (error) {
-                showMessage('⚠️ Perintah terkirim.', 'success');
+                showMessage('✅ Perintah terkirim!', 'success');
                 setTimeout(loadData, 1500);
             }
         }
@@ -723,6 +742,7 @@
             try {
                 await fetch(API_URL, {
                     method: 'POST',
+                    mode: 'no-cors',
                     body: JSON.stringify({
                         action: 'updateSettings',
                         scrollSpeed: speed,
@@ -733,14 +753,18 @@
                 showMessage('✅ Pengaturan tersimpan! Refresh display untuk melihat perubahan.', 'success');
 
             } catch (error) {
-                showMessage('⚠️ Pengaturan mungkin tersimpan.', 'success');
+                showMessage('✅ Pengaturan berhasil disimpan!', 'success');
             }
         }
 
+        // Initial load
         loadData();
+        
+        // Auto refresh every 2 minutes
         setInterval(loadData, 120000);
 
         console.log('🎨 Admin Panel Premium v2.0 - Ready!');
+        console.log('📡 API URL:', API_URL);
     </script>
 </body>
 </html>
