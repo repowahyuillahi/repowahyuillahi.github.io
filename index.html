@@ -103,18 +103,19 @@
         .marquee {
             display: inline-block;
             white-space: nowrap;
-            padding-left: 100%;
             font-size: 19px;
             font-weight: 500;
             line-height: 45px;
-            animation: scroll-left 35s linear infinite;
+            position: absolute;
+            right: 0;
         }
 
-        @keyframes scroll-left {
-            0% {
-                transform: translateX(0);
+        /* Animasi berjalan dari kanan ke kiri dengan kecepatan tetap */
+        @keyframes scrollText {
+            from {
+                transform: translateX(100%);
             }
-            100% {
+            to {
                 transform: translateX(-100%);
             }
         }
@@ -140,7 +141,7 @@
     </div>
 
     <script>
-        // !!! GANTI INI DENGAN URL APPS SCRIPT ANDA !!!
+        // URL Google Apps Script
         const API_URL = 'https://script.google.com/macros/s/AKfycbxYoJGNWiUEcPCw-kPc2YCaViNuXmHCylIcMPoP8BWiqfTXeze0JuZCZXOviKk9eqsSbA/exec';
         
         const iframe = document.getElementById("slidesFrame");
@@ -150,62 +151,81 @@
 
         let currentTextIndex = 0;
         let runningTexts = [];
+        let isAnimating = false;
+        let scrollSpeed = 15; // Kecepatan default (detik) - LEBIH LAMBAT = ANGKA LEBIH BESAR
 
         // Fetch data dari Google Sheets
         async function fetchRunningTexts() {
             try {
-                const response = await fetch(API_URL);
+                const response = await fetch(API_URL + '?t=' + Date.now());
                 const result = await response.json();
                 
-                if (result.success && result.data.length > 0) {
-                    runningTexts = result.data;
-                    console.log('Loaded texts:', runningTexts);
+                if (result.success && result.activeData && result.activeData.length > 0) {
+                    runningTexts = result.activeData;
+                    
+                    // Ambil speed setting dari API jika ada
+                    if (result.settings && result.settings.scrollSpeed) {
+                        scrollSpeed = parseInt(result.settings.scrollSpeed);
+                    }
+                    
+                    console.log('Loaded active texts:', runningTexts);
+                    console.log('Scroll speed:', scrollSpeed, 'detik');
                 } else {
                     runningTexts = [{
-                        text: 'DISPLAY INFORMASI TJAHAJA BARU',
+                        text: 'DISPLAY INFORMASI TJAHAJA BARU 🏍️ Selamat Datang',
                         daysRemaining: 999
                     }];
                 }
             } catch (error) {
                 console.error('Error fetching data:', error);
                 runningTexts = [{
-                    text: 'DISPLAY INFORMASI TJAHAJA BARU',
+                    text: 'DISPLAY INFORMASI TJAHAJA BARU 🏍️ Selamat Datang',
                     daysRemaining: 999
                 }];
             }
         }
 
-        // Tampilkan teks satu per satu dengan kecepatan optimal untuk usia 40+
+        // Tampilkan 1 teks running dengan kecepatan TETAP
         function showNextText() {
-            if (runningTexts.length === 0) return;
+            if (isAnimating || runningTexts.length === 0) return;
             
+            // Reset index jika sudah habis
             if (currentTextIndex >= runningTexts.length) {
                 currentTextIndex = 0;
             }
 
-            const currentText = runningTexts[currentTextIndex].text;
-            const daysLeft = runningTexts[currentTextIndex].daysRemaining;
+            const currentItem = runningTexts[currentTextIndex];
+            let displayText = currentItem.text;
             
             // Tambah info sisa hari jika kurang dari 3 hari
-            let displayText = currentText;
-            if (daysLeft <= 3 && daysLeft > 0) {
-                displayText += ` (Berakhir ${daysLeft} hari lagi)`;
+            if (currentItem.daysRemaining <= 3 && currentItem.daysRemaining > 0) {
+                displayText += ` (Berakhir ${currentItem.daysRemaining} hari lagi)`;
             }
             
-            // Separator motor Yamaha 🏍️
-            const separator = ' 🏍️ ';
-            marqueeText.textContent = displayText + separator + displayText + separator + displayText + separator;
+            // Tambah separator motor di akhir
+            displayText += ' 🏍️';
             
-            // Reset animasi dengan kecepatan yang nyaman dibaca (35 detik per loop)
+            // Set teks
+            marqueeText.textContent = displayText;
+            
+            // Gunakan kecepatan TETAP (tidak tergantung panjang teks)
+            const duration = scrollSpeed; // Langsung pakai nilai dari setting
+            
+            // Reset posisi dan mulai animasi
             marqueeText.style.animation = 'none';
-            setTimeout(() => {
-                marqueeText.style.animation = 'scroll-left 35s linear infinite';
-            }, 10);
-
+            marqueeText.offsetHeight; // Trigger reflow
+            marqueeText.style.animation = `scrollText ${duration}s linear`;
+            
+            isAnimating = true;
             currentTextIndex++;
 
-            // Ganti teks setiap 50 detik (kecepatan baca optimal untuk usia 40+)
-            setTimeout(showNextText, 50000);
+            console.log(`Menampilkan: "${displayText}" - Durasi: ${duration} detik (speed tetap)`);
+
+            // Setelah animasi selesai, tunggu 2 detik lalu tampilkan teks berikutnya
+            setTimeout(() => {
+                isAnimating = false;
+                setTimeout(showNextText, 2000); // Jeda 2 detik sebelum teks berikutnya
+            }, duration * 1000);
         }
 
         // Reload hanya iframe Google Slides
@@ -214,6 +234,7 @@
             iframe.src = '';
             setTimeout(() => {
                 iframe.src = currentSrc;
+                console.log('Google Slides di-refresh');
             }, 100);
         }
 
@@ -248,13 +269,19 @@
             showNextText();
         });
 
-        // Refresh data dari Google Sheets setiap 2 menit
-        setInterval(fetchRunningTexts, 120000);
+        // Refresh data dari Google Sheets setiap 3 menit
+        setInterval(() => {
+            fetchRunningTexts().then(() => {
+                console.log('Data running text di-refresh dari Google Sheets');
+            });
+        }, 180000); // 3 menit
 
         // Reload Google Slides setiap 60 detik
         setInterval(reloadSlides, 60000);
 
-        console.log('Display sistem aktif - Kecepatan optimal untuk usia 40+ tahun');
+        console.log('✅ Display sistem aktif - Kecepatan TETAP untuk semua teks');
+        console.log('🏍️ Separator: Icon Motor Yamaha');
+        console.log('⏰ Speed default: ' + scrollSpeed + ' detik per teks');
     </script>
 </body>
 </html>
