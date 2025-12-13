@@ -72,7 +72,6 @@
             margin-top: 20px;
         }
 
-        /* Footer dengan gradient premium */
         #footer {
             position: fixed;
             bottom: 0;
@@ -125,7 +124,6 @@
             opacity: 0;
         }
 
-        /* Breaking news style */
         .breaking {
             background: linear-gradient(90deg, #ff0000, #cc0000);
             color: white !important;
@@ -138,7 +136,6 @@
             50% { opacity: 0.7; }
         }
 
-        /* NEW badge */
         .new-badge {
             background: #ff8c00;
             color: white;
@@ -155,7 +152,6 @@
             50% { transform: scale(1.1); }
         }
 
-        /* Category icons styling */
         .category-icon {
             font-size: 28px;
             margin: 0 12px;
@@ -167,7 +163,6 @@
             50% { transform: translateY(-5px); }
         }
 
-        /* Progress bar */
         .progress-container {
             position: absolute;
             bottom: 0;
@@ -185,7 +180,6 @@
             box-shadow: 0 0 10px rgba(255,140,0,0.5);
         }
 
-        /* Animasi scroll dengan pause */
         @keyframes scrollWithPause {
             0% {
                 transform: translateX(100%);
@@ -210,7 +204,6 @@
             }
         }
 
-        /* Highlighted text */
         .highlight-promo {
             color: #ff0000;
             font-weight: 900;
@@ -222,21 +215,6 @@
             color: #ff8c00;
             font-weight: 900;
             font-size: 1.15em;
-        }
-
-        /* Multi-line support */
-        .multi-line .line1 {
-            display: block;
-            font-size: 24px;
-            font-weight: 700;
-        }
-
-        .multi-line .line2 {
-            display: block;
-            font-size: 16px;
-            font-weight: 500;
-            margin-top: -5px;
-            opacity: 0.9;
         }
     </style>
 </head>
@@ -263,7 +241,8 @@
     </div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbxYoJGNWiUEcPCw-kPc2YCaViNuXmHCylIcMPoP8BWiqfTXeze0JuZCZXOviKk9eqsSbA/exec';
+        // !!! GANTI INI DENGAN URL APPS SCRIPT ANDA !!!
+        const API_URL = 'https://script.google.com/macros/s/AKfycbynDFVmfgnZv_5D65NS4qniSS24ygJ9L8xEFwE3S0EOqx1wJg0bgD8R_xUNefxIWQTTuw/exec';
         
         const iframe = document.getElementById("slidesFrame");
         const loadingScreen = document.getElementById("loadingScreen");
@@ -278,7 +257,6 @@
         let reloadInterval = 60;
         let progressInterval;
 
-        // Kategori icons mapping
         const categoryIcons = {
             'service': '🔧',
             'promo': '💰',
@@ -290,7 +268,6 @@
             'default': '🏍️'
         };
 
-        // Detect kategori dari teks
         function detectCategory(text) {
             const lower = text.toLowerCase();
             if (lower.includes('service') || lower.includes('servis')) return 'service';
@@ -302,32 +279,13 @@
             return 'default';
         }
 
-        // Highlight keywords
         function highlightText(text) {
-            // Highlight PROMO, DISKON, GRATIS, etc
             const promoWords = ['PROMO', 'DISKON', 'GRATIS', 'FREE', 'SALE', 'MURAH'];
             promoWords.forEach(word => {
                 const regex = new RegExp(`\\b${word}\\b`, 'gi');
                 text = text.replace(regex, `<span class="highlight-promo">${word.toUpperCase()}</span>`);
             });
-
-            // Highlight angka dan persentase
             text = text.replace(/(\d+%?)/g, '<span class="highlight-number">$1</span>');
-
-            return text;
-        }
-
-        // Split long text into multi-line
-        function formatMultiLine(text) {
-            if (text.length > 80) {
-                const parts = text.split(/[-:]/);
-                if (parts.length >= 2) {
-                    return `
-                        <span class="line1">${parts[0].trim()}</span>
-                        <span class="line2">${parts.slice(1).join('-').trim()}</span>
-                    `;
-                }
-            }
             return text;
         }
 
@@ -344,10 +302,10 @@
                         reloadInterval = parseInt(result.settings.reloadInterval) || 60;
                     }
                     
-                    console.log('✅ Loaded:', runningTexts.length, 'texts');
+                    console.log('✅ Data loaded:', runningTexts.length, 'aktif');
                 } else {
                     runningTexts = [{
-                        text: 'DISPLAY INFORMASI TJAHAJA BARU - Selamat Datang',
+                        text: 'DISPLAY INFORMASI TJAHAJA BARU :',
                         daysRemaining: 999,
                         category: 'info',
                         priority: 'normal'
@@ -356,7 +314,7 @@
             } catch (error) {
                 console.error('❌ Error:', error);
                 runningTexts = [{
-                    text: 'DISPLAY INFORMASI TJAHAJA BARU - Selamat Datang',
+                    text: 'DISPLAY INFORMASI TJAHAJA BARU :',
                     daysRemaining: 999,
                     category: 'info',
                     priority: 'normal'
@@ -392,36 +350,21 @@
             const currentItem = runningTexts[currentTextIndex];
             let displayText = currentItem.text;
             
-            // Detect category
             const category = currentItem.category || detectCategory(displayText);
             const icon = categoryIcons[category] || categoryIcons.default;
             
-            // Check if NEW (less than 24 hours)
             const isNew = currentItem.daysRemaining > 0 && currentItem.daysRemaining >= (currentItem.durationDays - 1);
             const newBadge = isNew ? '<span class="new-badge">NEW</span>' : '';
             
-            // Expiring soon badge
             let expiringInfo = '';
             if (currentItem.daysRemaining <= 2 && currentItem.daysRemaining > 0) {
                 expiringInfo = ` <span style="color: #ff0000; font-weight: 900;">(Berakhir ${currentItem.daysRemaining} hari lagi!)</span>`;
             }
             
-            // Breaking news check
-            const isBreaking = currentItem.priority === 'urgent' || displayText.toLowerCase().includes('urgent');
+            const isBreaking = currentItem.priority === 'urgent';
             
-            // Highlight keywords
             displayText = highlightText(displayText);
             
-            // Format multi-line if needed
-            const isMultiLine = displayText.length > 80;
-            if (isMultiLine) {
-                marqueeText.classList.add('multi-line');
-                displayText = formatMultiLine(displayText);
-            } else {
-                marqueeText.classList.remove('multi-line');
-            }
-            
-            // Compose final text
             const finalText = `
                 <span class="category-icon">${icon}</span>
                 ${displayText}
@@ -432,7 +375,6 @@
             
             marqueeText.innerHTML = finalText;
             
-            // Apply breaking style
             if (isBreaking) {
                 marqueeText.classList.add('breaking');
             } else {
@@ -441,7 +383,6 @@
             
             const duration = scrollSpeed;
             
-            // Reset and start animation with pause in middle
             marqueeText.style.animation = 'none';
             marqueeText.offsetHeight;
             marqueeText.style.animation = `scrollWithPause ${duration}s ease-in-out`;
@@ -451,7 +392,7 @@
             isAnimating = true;
             currentTextIndex++;
 
-            console.log(`📺 [${category}] "${currentItem.text.substring(0, 40)}..." | ${duration}s`);
+            console.log(`📺 [${category}] "${currentItem.text.substring(0, 40)}..." (${duration}s)`);
 
             setTimeout(() => {
                 isAnimating = false;
@@ -504,8 +445,7 @@
 
         setInterval(reloadSlides, reloadInterval * 1000);
 
-        console.log('🚀 TJAHAJA BARU Display System - PREMIUM VERSION');
-        console.log('✨ Features: Pause, Fade, Highlight, Icons, Progress, NEW Badge, Breaking News');
+        console.log('🚀 Display Tjahaja Baru - PREMIUM VERSION');
     </script>
 </body>
 </html>
