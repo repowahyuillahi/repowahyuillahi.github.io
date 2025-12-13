@@ -3,12 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
     <title>Display Informasi Digital Tjahaja Baru</title>
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+        }
+
         #slidesFrame {
             width: 100%;
-            height: calc(100vh - 50px);
+            height: calc(100vh - 60px);
             border: none;
             opacity: 0;
             transition: opacity 1s ease-in-out;
@@ -25,7 +35,7 @@
             align-items: center;
             justify-content: center;
             flex-direction: column;
-            z-index: 1;
+            z-index: 10000;
             font-family: Arial, sans-serif;
         }
 
@@ -62,35 +72,38 @@
             margin-top: 20px;
         }
 
+        /* Footer dengan gradient premium */
         #footer {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background-color: rgba(255, 255, 255, 0.95);
+            background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(240,245,255,0.98) 100%);
             color: #041066;
             display: flex;
             align-items: center;
             overflow: hidden;
             border-top: 3px solid #041066;
-            padding: 5px 0;
+            padding: 0;
             font-family: 'Roboto', sans-serif;
-            height: 45px;
+            height: 60px;
             z-index: 999;
-            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 -4px 20px rgba(4,16,102,0.15);
+            backdrop-filter: blur(10px);
         }
 
         #timeDisplay {
-            padding: 0 20px;
+            padding: 0 25px;
             white-space: nowrap;
-            font-weight: bold;
-            font-size: 17px;
-            background-color: #041066;
+            font-weight: 700;
+            font-size: 18px;
+            background: linear-gradient(135deg, #041066 0%, #062080 100%);
             color: white;
             height: 100%;
             display: flex;
             align-items: center;
-            min-width: 350px;
+            min-width: 380px;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
         }
 
         .marquee-container {
@@ -103,21 +116,127 @@
         .marquee {
             display: inline-block;
             white-space: nowrap;
-            font-size: 19px;
-            font-weight: 500;
-            line-height: 45px;
+            font-size: 22px;
+            font-weight: 600;
+            line-height: 60px;
             position: absolute;
-            right: 0;
+            color: #041066;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            opacity: 0;
         }
 
-        /* Animasi berjalan dari kanan ke kiri dengan kecepatan tetap */
-        @keyframes scrollText {
-            from {
+        /* Breaking news style */
+        .breaking {
+            background: linear-gradient(90deg, #ff0000, #cc0000);
+            color: white !important;
+            padding: 0 20px;
+            animation: flash 1.5s infinite;
+        }
+
+        @keyframes flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        /* NEW badge */
+        .new-badge {
+            background: #ff8c00;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 900;
+            margin-left: 10px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Category icons styling */
+        .category-icon {
+            font-size: 28px;
+            margin: 0 12px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        /* Progress bar */
+        .progress-container {
+            position: absolute;
+            bottom: 0;
+            left: 380px;
+            right: 0;
+            height: 3px;
+            background: rgba(4,16,102,0.1);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #ff8c00, #ff6b00);
+            width: 0%;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 10px rgba(255,140,0,0.5);
+        }
+
+        /* Animasi scroll dengan pause */
+        @keyframes scrollWithPause {
+            0% {
                 transform: translateX(100%);
+                opacity: 0;
             }
-            to {
+            10% {
+                opacity: 1;
+            }
+            45% {
+                transform: translateX(50%);
+            }
+            55% {
+                transform: translateX(50%);
+            }
+            90% {
                 transform: translateX(-100%);
+                opacity: 1;
             }
+            100% {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+        }
+
+        /* Highlighted text */
+        .highlight-promo {
+            color: #ff0000;
+            font-weight: 900;
+            font-size: 1.1em;
+            text-shadow: 3px 3px 6px rgba(255,0,0,0.3);
+        }
+
+        .highlight-number {
+            color: #ff8c00;
+            font-weight: 900;
+            font-size: 1.15em;
+        }
+
+        /* Multi-line support */
+        .multi-line .line1 {
+            display: block;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .multi-line .line2 {
+            display: block;
+            font-size: 16px;
+            font-weight: 500;
+            margin-top: -5px;
+            opacity: 0.9;
         }
     </style>
 </head>
@@ -138,23 +257,80 @@
         <div class="marquee-container">
             <div id="marqueeText" class="marquee">Memuat informasi...</div>
         </div>
+        <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+        </div>
     </div>
 
     <script>
-        // URL Google Apps Script
         const API_URL = 'https://script.google.com/macros/s/AKfycbxYoJGNWiUEcPCw-kPc2YCaViNuXmHCylIcMPoP8BWiqfTXeze0JuZCZXOviKk9eqsSbA/exec';
         
         const iframe = document.getElementById("slidesFrame");
         const loadingScreen = document.getElementById("loadingScreen");
         const marqueeText = document.getElementById("marqueeText");
         const timeDisplay = document.getElementById("timeDisplay");
+        const progressBar = document.getElementById("progressBar");
 
         let currentTextIndex = 0;
         let runningTexts = [];
         let isAnimating = false;
-        let scrollSpeed = 15; // Kecepatan default (detik) - LEBIH LAMBAT = ANGKA LEBIH BESAR
+        let scrollSpeed = 15;
+        let reloadInterval = 60;
+        let progressInterval;
 
-        // Fetch data dari Google Sheets
+        // Kategori icons mapping
+        const categoryIcons = {
+            'service': '🔧',
+            'promo': '💰',
+            'diskon': '🏷️',
+            'event': '🎉',
+            'info': 'ℹ️',
+            'yamaha': '🏍️',
+            'nmax': '🏍️',
+            'default': '🏍️'
+        };
+
+        // Detect kategori dari teks
+        function detectCategory(text) {
+            const lower = text.toLowerCase();
+            if (lower.includes('service') || lower.includes('servis')) return 'service';
+            if (lower.includes('promo')) return 'promo';
+            if (lower.includes('diskon') || lower.includes('discount')) return 'diskon';
+            if (lower.includes('event') || lower.includes('acara')) return 'event';
+            if (lower.includes('nmax')) return 'nmax';
+            if (lower.includes('yamaha')) return 'yamaha';
+            return 'default';
+        }
+
+        // Highlight keywords
+        function highlightText(text) {
+            // Highlight PROMO, DISKON, GRATIS, etc
+            const promoWords = ['PROMO', 'DISKON', 'GRATIS', 'FREE', 'SALE', 'MURAH'];
+            promoWords.forEach(word => {
+                const regex = new RegExp(`\\b${word}\\b`, 'gi');
+                text = text.replace(regex, `<span class="highlight-promo">${word.toUpperCase()}</span>`);
+            });
+
+            // Highlight angka dan persentase
+            text = text.replace(/(\d+%?)/g, '<span class="highlight-number">$1</span>');
+
+            return text;
+        }
+
+        // Split long text into multi-line
+        function formatMultiLine(text) {
+            if (text.length > 80) {
+                const parts = text.split(/[-:]/);
+                if (parts.length >= 2) {
+                    return `
+                        <span class="line1">${parts[0].trim()}</span>
+                        <span class="line2">${parts.slice(1).join('-').trim()}</span>
+                    `;
+                }
+            }
+            return text;
+        }
+
         async function fetchRunningTexts() {
             try {
                 const response = await fetch(API_URL + '?t=' + Date.now());
@@ -163,33 +339,52 @@
                 if (result.success && result.activeData && result.activeData.length > 0) {
                     runningTexts = result.activeData;
                     
-                    // Ambil speed setting dari API jika ada
-                    if (result.settings && result.settings.scrollSpeed) {
-                        scrollSpeed = parseInt(result.settings.scrollSpeed);
+                    if (result.settings) {
+                        scrollSpeed = parseInt(result.settings.scrollSpeed) || 15;
+                        reloadInterval = parseInt(result.settings.reloadInterval) || 60;
                     }
                     
-                    console.log('Loaded active texts:', runningTexts);
-                    console.log('Scroll speed:', scrollSpeed, 'detik');
+                    console.log('✅ Loaded:', runningTexts.length, 'texts');
                 } else {
                     runningTexts = [{
-                        text: 'DISPLAY INFORMASI TJAHAJA BARU 🏍️ Selamat Datang',
-                        daysRemaining: 999
+                        text: 'DISPLAY INFORMASI TJAHAJA BARU - Selamat Datang',
+                        daysRemaining: 999,
+                        category: 'info',
+                        priority: 'normal'
                     }];
                 }
             } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error('❌ Error:', error);
                 runningTexts = [{
-                    text: 'DISPLAY INFORMASI TJAHAJA BARU 🏍️ Selamat Datang',
-                    daysRemaining: 999
+                    text: 'DISPLAY INFORMASI TJAHAJA BARU - Selamat Datang',
+                    daysRemaining: 999,
+                    category: 'info',
+                    priority: 'normal'
                 }];
             }
         }
 
-        // Tampilkan 1 teks running dengan kecepatan TETAP
+        function updateProgressBar(duration) {
+            clearInterval(progressInterval);
+            progressBar.style.width = '0%';
+            
+            const startTime = Date.now();
+            const totalDuration = duration * 1000;
+            
+            progressInterval = setInterval(() => {
+                const elapsed = Date.now() - startTime;
+                const progress = Math.min((elapsed / totalDuration) * 100, 100);
+                progressBar.style.width = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(progressInterval);
+                }
+            }, 50);
+        }
+
         function showNextText() {
             if (isAnimating || runningTexts.length === 0) return;
             
-            // Reset index jika sudah habis
             if (currentTextIndex >= runningTexts.length) {
                 currentTextIndex = 0;
             }
@@ -197,48 +392,82 @@
             const currentItem = runningTexts[currentTextIndex];
             let displayText = currentItem.text;
             
-            // Tambah info sisa hari jika kurang dari 3 hari
-            if (currentItem.daysRemaining <= 3 && currentItem.daysRemaining > 0) {
-                displayText += ` (Berakhir ${currentItem.daysRemaining} hari lagi)`;
+            // Detect category
+            const category = currentItem.category || detectCategory(displayText);
+            const icon = categoryIcons[category] || categoryIcons.default;
+            
+            // Check if NEW (less than 24 hours)
+            const isNew = currentItem.daysRemaining > 0 && currentItem.daysRemaining >= (currentItem.durationDays - 1);
+            const newBadge = isNew ? '<span class="new-badge">NEW</span>' : '';
+            
+            // Expiring soon badge
+            let expiringInfo = '';
+            if (currentItem.daysRemaining <= 2 && currentItem.daysRemaining > 0) {
+                expiringInfo = ` <span style="color: #ff0000; font-weight: 900;">(Berakhir ${currentItem.daysRemaining} hari lagi!)</span>`;
             }
             
-            // Tambah separator motor di akhir
-            displayText += ' 🏍️';
+            // Breaking news check
+            const isBreaking = currentItem.priority === 'urgent' || displayText.toLowerCase().includes('urgent');
             
-            // Set teks
-            marqueeText.textContent = displayText;
+            // Highlight keywords
+            displayText = highlightText(displayText);
             
-            // Gunakan kecepatan TETAP (tidak tergantung panjang teks)
-            const duration = scrollSpeed; // Langsung pakai nilai dari setting
+            // Format multi-line if needed
+            const isMultiLine = displayText.length > 80;
+            if (isMultiLine) {
+                marqueeText.classList.add('multi-line');
+                displayText = formatMultiLine(displayText);
+            } else {
+                marqueeText.classList.remove('multi-line');
+            }
             
-            // Reset posisi dan mulai animasi
+            // Compose final text
+            const finalText = `
+                <span class="category-icon">${icon}</span>
+                ${displayText}
+                ${newBadge}
+                ${expiringInfo}
+                <span class="category-icon">${icon}</span>
+            `;
+            
+            marqueeText.innerHTML = finalText;
+            
+            // Apply breaking style
+            if (isBreaking) {
+                marqueeText.classList.add('breaking');
+            } else {
+                marqueeText.classList.remove('breaking');
+            }
+            
+            const duration = scrollSpeed;
+            
+            // Reset and start animation with pause in middle
             marqueeText.style.animation = 'none';
-            marqueeText.offsetHeight; // Trigger reflow
-            marqueeText.style.animation = `scrollText ${duration}s linear`;
+            marqueeText.offsetHeight;
+            marqueeText.style.animation = `scrollWithPause ${duration}s ease-in-out`;
+            
+            updateProgressBar(duration);
             
             isAnimating = true;
             currentTextIndex++;
 
-            console.log(`Menampilkan: "${displayText}" - Durasi: ${duration} detik (speed tetap)`);
+            console.log(`📺 [${category}] "${currentItem.text.substring(0, 40)}..." | ${duration}s`);
 
-            // Setelah animasi selesai, tunggu 2 detik lalu tampilkan teks berikutnya
             setTimeout(() => {
                 isAnimating = false;
-                setTimeout(showNextText, 2000); // Jeda 2 detik sebelum teks berikutnya
+                setTimeout(showNextText, 1500);
             }, duration * 1000);
         }
 
-        // Reload hanya iframe Google Slides
         function reloadSlides() {
             const currentSrc = iframe.src;
             iframe.src = '';
             setTimeout(() => {
                 iframe.src = currentSrc;
-                console.log('Google Slides di-refresh');
+                console.log('🔄 Slides reloaded');
             }, 100);
         }
 
-        // Update waktu
         function updateTime() {
             const daysOfWeek = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
             const monthsOfYear = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
@@ -255,7 +484,6 @@
             timeDisplay.textContent = `${dayOfWeek}, ${dayOfMonth} ${month} ${year} | ${hours}:${minutes}:${seconds}`;
         }
 
-        // Initialize
         setTimeout(() => {
             loadingScreen.style.display = "none";
             iframe.style.opacity = 1;
@@ -264,24 +492,20 @@
         setInterval(updateTime, 1000);
         updateTime();
 
-        // Load data dan mulai running text
         fetchRunningTexts().then(() => {
             showNextText();
         });
 
-        // Refresh data dari Google Sheets setiap 3 menit
         setInterval(() => {
             fetchRunningTexts().then(() => {
-                console.log('Data running text di-refresh dari Google Sheets');
+                console.log('♻️ Data refreshed');
             });
-        }, 180000); // 3 menit
+        }, 180000);
 
-        // Reload Google Slides setiap 60 detik
-        setInterval(reloadSlides, 60000);
+        setInterval(reloadSlides, reloadInterval * 1000);
 
-        console.log('✅ Display sistem aktif - Kecepatan TETAP untuk semua teks');
-        console.log('🏍️ Separator: Icon Motor Yamaha');
-        console.log('⏰ Speed default: ' + scrollSpeed + ' detik per teks');
+        console.log('🚀 TJAHAJA BARU Display System - PREMIUM VERSION');
+        console.log('✨ Features: Pause, Fade, Highlight, Icons, Progress, NEW Badge, Breaking News');
     </script>
 </body>
 </html>
